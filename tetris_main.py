@@ -183,9 +183,9 @@ def draw_grid(surface, grid):
 
     for i in range (len(grid)):
         # color of grid lines (I can't think of any nicer color guys pls help me ;-;)
-        pygame.draw.line(surface, (128, 128, 128))
+        pygame.draw.line(surface, (128, 128, 128), (sx, sy+i*block_size), (sx+play_width, sy+i*block_size))
         for j in range(len(grid[i])):
-            pass
+            pygame.draw.line(surface, (128, 128, 128), (sx, j*block_size, sy), (sx+j*block_size, sy+play_height))
 
 def clear_rows(grid, locked):
     pass
