@@ -177,6 +177,7 @@ def draw_text_middle(text, size, color, surface):
     pass
    
 def draw_grid(surface, grid):
+    # weird
     sx = top_left_x
     sy = top_left_y
 
