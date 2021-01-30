@@ -264,6 +264,7 @@ def main(win):
             if not(valid_space(current_piece, grid)) and current_piece.y > 0:
                 current_piece.y -= 1
                 change_piece = True
+                # last left off here
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
