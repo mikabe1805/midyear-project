@@ -144,7 +144,7 @@ class Piece(object):
         self.x = x
         self.y = y
         self.shape = shape
-        self.color = shape[shapes.index(shape)]
+        self.color = shape_colors[shapes.index(shape)]
         self.rotation = 0
  
 def create_grid(locked_pos={}):
@@ -174,6 +174,8 @@ def convert_shape_format(shape):
     for i, pos in enumerate(positions):
         # for offsetting to center the piece
         positions[i] = (pos[0] - 2, pos[1]-4)
+
+    return positions
  
 def valid_space(shape, grid):
     accepted_pos = [[(j, i) for j in range(10) if grid [i][j] == (0, 0, 0)] for i in range (20)]
@@ -211,20 +213,39 @@ def draw_grid(surface, grid):
         # color of grid lines (I can't think of any nicer color guys pls help me ;-;)
         pygame.draw.line(surface, (128, 128, 128), (sx, sy+i*block_size), (sx+play_width, sy+i*block_size))
         for j in range(len(grid[i])):
-            pygame.draw.line(surface, (128, 128, 128), (sx, j*block_size, sy), (sx+j*block_size, sy+play_height))
+            # come back to check if works once code is finished
+            pygame.draw.line(surface, (128, 128, 128), (sx, sy + j*block_size), (sx+j*block_size, sy+play_height))
+            # pygame.draw.line(surface, (128, 128, 128), (sx, j*block_size, sy), (sx+j*block_size, sy+play_height))
          
 
 def clear_rows(grid, locked):
     pass
  
 def draw_next_shape(shape, surface):
-    pass
+    # maybe problematic font
+    font = pygame.font.Font('goodbyeDespair.ttf', 30)
+    label = font.render('Next Shape', 1, (255, 255, 255))
+
+    sx = top_left_x + play_width + 50
+    sy = top_left_y + play_height/2 - 100
+    format = shape.shape[shape.rotation % len(shape.shape)]
+
+    for i, line in enumerate(format):
+        row = list(line)
+        for j, column in enumerate(row):
+            # draw blocks according to where they show up
+            if column == '0':
+                pygame.draw.rect(surface, shape.color, (sx + j*30, sy + i*block_size, block_size, block_size), 0)
  
+    surface.blit(label, (sx + 10, sy - 30))
+
 def draw_window(surface, grid):
     surface.fill((0, 0, 0))
 
     pygame.font.init()
-    font = pygame.font.SysFont('goodbye_despair', 60)
+    # font = os.path.abspath("C:/Users/mikus/Downloads/goodbyeDespair.ttf")
+    # font = pygame.font.Font('C:/Users/mikus/Downloads/goodbyeDespair.ttf', 60)
+    font = pygame.font.Font('goodbyeDespair.ttf', 60)
     label = font.render('Tetris', 1, (255, 255, 255))
 
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), 30))
@@ -264,7 +285,6 @@ def main(win):
             if not(valid_space(current_piece, grid)) and current_piece.y > 0:
                 current_piece.y -= 1
                 change_piece = True
-                # last left off here
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -289,7 +309,28 @@ def main(win):
                     if not(valid_space(current_piece, grid)):
                         current_piece.rotation -= 1
 
+        shape_pos = convert_shape_format(current_piece)
+
+        for i in range(len(shape_pos)):
+            x, y = shape_pos[i]
+            if y > -1:
+                grid[y][x] = current_piece.color
+
+        if change_piece:
+            for pos in shape_pos:
+                # our piece is no longer moving
+                p = (pos[0], pos[1])
+                locked_positions[p] = current_piece.color
+            current_piece = next_piece
+            next_piece = get_shape()
+            change_piece = False
+
+        draw_next_shape(next_piece, win)
         draw_window(win, grid)
+
+        if check_lost(locked_positions):
+            run = False
+    pygame.display.quit()
 
  
 def main_menu(win):
