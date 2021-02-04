@@ -134,8 +134,12 @@ T = [['.....',
       '..0..',
       '.....']]
  
+# 7
 shapes = [S, Z, I, O, J, L, T]
-shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
+# all the colors, make it nicer >:(
+# 7 colors previously
+# now 
+shape_colors = [(84, 22, 180), (112, 39, 195), (185, 76, 225), (150, 0, 205), (164, 66, 220), (181, 100, 227), (228, 0, 224), (236, 71, 233), (244, 147, 242), (0, 181, 236), (204, 255, 0), (255, 106, 0), (67, 59, 103), (96, 88, 133), (148, 141, 179)]
 # index 0 - 6 represent shape
  
  
@@ -144,6 +148,7 @@ class Piece(object):
         self.x = x
         self.y = y
         self.shape = shape
+        # self.color = shape_colors[random.randint(0, len(shape_colors)-1)]
         self.color = shape_colors[shapes.index(shape)]
         self.rotation = 0
  
@@ -214,7 +219,7 @@ def draw_grid(surface, grid):
         pygame.draw.line(surface, (128, 128, 128), (sx, sy+i*block_size), (sx+play_width, sy+i*block_size))
         for j in range(len(grid[i])):
             # come back to check if works once code is finished
-            pygame.draw.line(surface, (128, 128, 128), (sx, sy + j*block_size), (sx+j*block_size, sy+play_height))
+            pygame.draw.line(surface, (128, 128, 128), (sx + j*block_size, sy), (sx+j*block_size, sy+play_height))
             # pygame.draw.line(surface, (128, 128, 128), (sx, j*block_size, sy), (sx+j*block_size, sy+play_height))
          
 
@@ -258,7 +263,7 @@ def draw_window(surface, grid):
     pygame.draw.rect (surface, (255, 106, 0), (top_left_x, top_left_y, play_width, play_height), 4)
 
     draw_grid(surface, grid)
-    pygame.display.update()
+    # pygame.display.update()
 
  
 def main(win):
@@ -272,7 +277,7 @@ def main(win):
     next_piece = get_shape()
     clock = pygame.time.Clock()
     fall_time = 0
-    fall_speed = 0.27
+    fall_speed = 0.25
 
     while run:
         grid = create_grid(locked_positions)
@@ -325,8 +330,9 @@ def main(win):
             next_piece = get_shape()
             change_piece = False
 
-        draw_next_shape(next_piece, win)
         draw_window(win, grid)
+        draw_next_shape(next_piece, win)
+        pygame.display.update()
 
         if check_lost(locked_positions):
             run = False
