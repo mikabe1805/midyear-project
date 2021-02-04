@@ -224,7 +224,25 @@ def draw_grid(surface, grid):
          
 
 def clear_rows(grid, locked):
-    pass
+    # TODO: find a way to shift fallen pieces all the way down
+    inc = 0
+    for i in range(len(grid)-1, -1, -1):
+        row = grid[i]
+        if (0,0,0) not in row:
+            inc += 1
+            ind = i
+            for j in range(len(row)):
+                try:
+                    del locked[(j, i)]
+                except:
+                    continue
+
+    if inc > 0:
+        for key in sorted(list(locked), key = lambda x: x[1])[::-1]:
+            x,y = key
+            if y < ind:
+                newkey = (x,y + inc)
+                locked[newkey] = locked.pop(key)
  
 def draw_next_shape(shape, surface):
     # maybe problematic font
@@ -329,6 +347,8 @@ def main(win):
             current_piece = next_piece
             next_piece = get_shape()
             change_piece = False
+            # not sure
+            clear_rows(grid, locked_positions)
 
         draw_window(win, grid)
         draw_next_shape(next_piece, win)
