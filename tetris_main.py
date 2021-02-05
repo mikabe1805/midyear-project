@@ -208,7 +208,10 @@ def get_shape():
  
  
 def draw_text_middle(text, size, color, surface):
-    pass
+    font = pygame.font.Font('goodbyeDespair.ttf', size, bold=True)
+    label = font.render(text, 1, color)
+
+    surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), top_left_y + play_height/2 - label.get_height()/2))
    
 def draw_grid(surface, grid):
     sx = top_left_x
@@ -243,6 +246,8 @@ def clear_rows(grid, locked):
             if y < ind:
                 newkey = (x,y + inc)
                 locked[newkey] = locked.pop(key)
+
+    return inc
  
 def draw_next_shape(shape, surface):
     # maybe problematic font
@@ -262,7 +267,7 @@ def draw_next_shape(shape, surface):
  
     surface.blit(label, (sx + 10, sy - 30))
 
-def draw_window(surface, grid):
+def draw_window(surface, grid, score=0):
     surface.fill((0, 0, 0))
 
     pygame.font.init()
@@ -272,6 +277,14 @@ def draw_window(surface, grid):
     label = font.render('Tetris', 1, (255, 255, 255))
 
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), 30))
+
+    font = pygame.font.Font('goodbyeDespair.ttf', 30)
+    label = font.render('Score: ' + str(score), 1, (255, 255, 255))
+
+    sx = top_left_x + play_width + 50
+    sy = top_left_y + play_height/2 - 100
+
+    surface.blit(label, (sx + 20, sy + 180))
     
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -296,11 +309,19 @@ def main(win):
     clock = pygame.time.Clock()
     fall_time = 0
     fall_speed = 0.25
+    level_time = 0
+    score = 0
 
     while run:
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime()
+        level_time += clock.get_rawtime()
         clock.tick()
+
+        if level_time/1000 > 5:
+            level_time = 0
+            if fall_speed > 0.12:
+                fall_speed -= 0.005
 
         if fall_time/1000 > fall_speed:
             fall_time = 0
@@ -348,13 +369,17 @@ def main(win):
             next_piece = get_shape()
             change_piece = False
             # not sure
-            clear_rows(grid, locked_positions)
+            score += clear_rows(grid, locked_positions) * 10
 
-        draw_window(win, grid)
+        draw_window(win, grid, score)
         draw_next_shape(next_piece, win)
         pygame.display.update()
 
         if check_lost(locked_positions):
+            draw_text_middle("YOU LOST", 80, (255, 255, 255), win)
+            pygame.display.update()
+            pygame.time.delay(1500)
+            # draw_text_middle(win, "TIME FOR PUNISHMENT", 80, (255, 255, 255))
             run = False
     pygame.display.quit()
 
