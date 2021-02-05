@@ -207,11 +207,14 @@ def get_shape():
     return Piece(5, 0, random.choice(shapes))
  
  
-def draw_text_middle(text, size, color, surface):
+def draw_text_middle(text, text2, size, color, surface):
     font = pygame.font.Font('goodbyeDespair.ttf', size, bold=True)
     label = font.render(text, 1, color)
+    surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), top_left_y + (play_height/16)*3 - label.get_height()/2))
 
-    surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), top_left_y + play_height/2 - label.get_height()/2))
+    font = pygame.font.Font('goodbyeDespair.ttf', size, bold=True)
+    label = font.render(text2, 1, color)
+    surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), top_left_y + (play_height/8)*5 - label.get_height()/2))
    
 def draw_grid(surface, grid):
     sx = top_left_x
@@ -284,7 +287,7 @@ def draw_window(surface, grid, score=0):
     sx = top_left_x + play_width + 50
     sy = top_left_y + play_height/2 - 100
 
-    surface.blit(label, (sx + 20, sy + 180))
+    surface.blit(label, (sx + 20, sy + 250))
     
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -376,9 +379,9 @@ def main(win):
         pygame.display.update()
 
         if check_lost(locked_positions):
-            draw_text_middle("YOU LOST", 80, (255, 255, 255), win)
+            draw_text_middle("YOU LOST", "TIME FOR PUNISHMENT", 65, (180, 0, 0), win)
             pygame.display.update()
-            pygame.time.delay(1500)
+            pygame.time.delay(4000)
             # draw_text_middle(win, "TIME FOR PUNISHMENT", 80, (255, 255, 255))
             run = False
     pygame.display.quit()
