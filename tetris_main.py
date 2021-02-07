@@ -1,4 +1,4 @@
-# really weird
+# I hate github
 import pygame
 import random
  
