@@ -1,3 +1,4 @@
+# really weird
 import pygame
 import random
  
