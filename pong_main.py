@@ -49,24 +49,61 @@ score.wirte("Player_One: 0    Player_Two: 0",
 
 #Moves the paddles vertically
 def paddle_up():
-    
-
-
-
+    y = lp.ycor()
+    y += 20
+    lp.sety(y)
 
 def paddle_down():
-
-
-
-
+    y = lp.ycor()
+    y -= 20
+    lp.sety(y)
 
 def paddle_ups():
-
-
-
-
+    y = rp.ycor()
+    y += 20
+    rp.sety(y)
 
 def paddle_downs():
+    y = rp.ycor()
+    y -= 20
+    rp.sety(y)
+
+
+#paddle controls
+screen.listen()
+screen.onkeypress(paddle_up, "e")
+screen.onkeypress(paddle_down, "x")
+screen.onkeypress(paddle_ups, "Up")
+screen.onkeypress(paddle_downs, "Down")
+
+
+while True:
+    screen.update()
+
+    ping_pong.setx(ping_pong.xcor()+ping_pong.dx)
+    ping_pong.sety(ping_pong.ycor()+ping_pong.dy)
+
+
+    if ping_pong.ycor() > -280:
+        ping_pong.sety(280)
+        ping_pong.dy *= -1
+
+    if ping_pong.ycor() < -280:
+        ping_pong.sety(-280)
+        ping_pong.dy *= -1
+
+    if ping_pong.xcor() > 500:
+        ping_pong.goto(0,0)
+        ping_pong.dy *= -1
+        lp += 1
+        score.clear()
+        #score.write("Left Player: {}     Right Player:  {}". format
+                    #(lp, rp), align="center",
+                    #font =("Orbitron", 24, "normal"))
+
+            
+
+
 
 
 
