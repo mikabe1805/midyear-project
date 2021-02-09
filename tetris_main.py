@@ -306,6 +306,9 @@ class Tetris(Frame):
 
         def draw_window(surface, grid, score=0, high_score=0):
             surface.fill((0, 0, 0))
+            # place sprite
+            spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+            surface.blit(spr, (0,0))
 
             pygame.font.init()
             # font = os.path.abspath("C:/Users/mikus/Downloads/goodbyeDespair.ttf")
