@@ -214,6 +214,39 @@ class Tetris(Frame):
                     return True
 
             return False
+
+        # last left off
+        # gggg
+        def check_losing1(positions):
+            # problem: only works once
+            # update: I'm an idiot.
+            for pos in positions:
+                x, y = pos
+                if y < 12:
+                    return True
+
+            return False
+
+        def check_losing2(positions):
+            # problem: only works once
+            # update: I'm an idiot.
+            for pos in positions:
+                x, y = pos
+                if y < 8:
+                    return True
+
+            return False
+
+        def check_losing3(positions):
+            # problem: only works once
+            # update: I'm an idiot.
+            for pos in positions:
+                x, y = pos
+                if y < 3:
+                    return True
+
+            return False
+
         
         def get_shape():
             return Piece(5, 0, random.choice(shapes))
@@ -309,6 +342,7 @@ class Tetris(Frame):
             return score
 
         def draw_window(surface, grid, score=0, high_score=0):
+            # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
             surface.fill((0, 0, 0))
             # place sprite
             # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
@@ -344,10 +378,15 @@ class Tetris(Frame):
                     pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size), 0)
             
             # gggg
-            if self.fall_speed < 0.2:
+            if check_losing1(self.locked_positions):
                 spr = pygame.image.load('sprites/mikan/mikan_sad.png')
                 surface.blit(spr, (265,400))
+                
 
+            # if check_losing2(self.locked_positions):
+            #     transparent = (0, 0, 0, 0)
+            #     spr.fill(transparent)
+            # not what I tried tp do, but interesting effect ^^^
 
             # color represents outside of play area (the grid)
             pygame.draw.rect (surface, (255, 106, 0), (top_left_x, top_left_y, play_width, play_height), 4)
@@ -355,15 +394,21 @@ class Tetris(Frame):
             draw_grid(surface, grid)
             # pygame.display.update()
 
-            if self.fall_speed < 0.18:
+            if check_losing2(self.locked_positions):
                 spr = pygame.image.load('sprites/mikan/mikan_sad.png')
                 surface.blit(spr, (265,400))
+
+            # if check_losing3(self.locked_positions):
+            #     spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+            #     spr_big = pygame.transform.rotozoom(spr, 0, 3.5)
+            #     # surface.blit(spr_big, (80,240))
+            #     surface.blit(spr_big, (-90,120))
 
         
         def main(win):
             high_score = max_score()
-            locked_positions = {}
-            grid = create_grid(locked_positions)
+            self.locked_positions = {}
+            grid = create_grid(self.locked_positions)
 
             change_piece = False
             run = True
@@ -376,7 +421,7 @@ class Tetris(Frame):
             score = 0
 
             while run:
-                grid = create_grid(locked_positions)
+                grid = create_grid(self.locked_positions)
                 fall_time += clock.get_rawtime()
                 level_time += clock.get_rawtime()
                 clock.tick()
@@ -438,18 +483,23 @@ class Tetris(Frame):
                     for pos in shape_pos:
                         # our piece is no longer moving
                         p = (pos[0], pos[1])
-                        locked_positions[p] = current_piece.color
+                        self.locked_positions[p] = current_piece.color
                     current_piece = next_piece
                     next_piece = get_shape()
                     change_piece = False
                     # not sure
-                    score += clear_rows(grid, locked_positions) * 10
+                    score += clear_rows(grid, self.locked_positions) * 10
 
                 draw_window(win, grid, score, high_score)
                 draw_next_shape(next_piece, win)
+                if check_losing3(self.locked_positions):
+                    spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+                    spr_big = pygame.transform.rotozoom(spr, 0, 3.5)
+                    # surface.blit(spr_big, (80,240))
+                    win.blit(spr_big, (-90,120))
                 pygame.display.update()
 
-                if check_lost(locked_positions):
+                if check_lost(self.locked_positions):
                     draw_text_middle2("YOU LOST", "TIME FOR PUNISHMENT", 65, (180, 0, 0), win)
                     pygame.display.update()
                     pygame.time.delay(4000)
