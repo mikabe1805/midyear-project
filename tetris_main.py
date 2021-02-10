@@ -1,4 +1,5 @@
 # I hate github
+# image of mikan will not show up until player starts losing
 import pygame
 import random
 from tkinter import *
@@ -235,6 +236,9 @@ class Tetris(Frame):
             sx = top_left_x
             sy = top_left_y
 
+            # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+            # surface.blit(spr, (265,400))
+
             for i in range (len(grid)):
                 # color of grid lines (I can't think of any nicer color guys pls help me ;-;)
                 pygame.draw.line(surface, (128, 128, 128), (sx, sy+i*block_size), (sx+play_width, sy+i*block_size))
@@ -245,7 +249,7 @@ class Tetris(Frame):
                 
 
         def clear_rows(grid, locked):
-            # TODO: find a way to shift fallen pieces all the way down
+            # copy this code and make it into a function named "check" to see if the player is losing
             inc = 0
             for i in range(len(grid)-1, -1, -1):
                 row = grid[i]
@@ -307,8 +311,8 @@ class Tetris(Frame):
         def draw_window(surface, grid, score=0, high_score=0):
             surface.fill((0, 0, 0))
             # place sprite
-            spr = pygame.image.load('sprites/mikan/mikan_sad.png')
-            surface.blit(spr, (0,0))
+            # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+            # surface.blit(spr, (265,400))
 
             pygame.font.init()
             # font = os.path.abspath("C:/Users/mikus/Downloads/goodbyeDespair.ttf")
@@ -339,11 +343,21 @@ class Tetris(Frame):
                 for j in range(len(grid[i])):
                     pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size), 0)
             
+            # gggg
+            if self.fall_speed < 0.2:
+                spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+                surface.blit(spr, (265,400))
+
+
             # color represents outside of play area (the grid)
             pygame.draw.rect (surface, (255, 106, 0), (top_left_x, top_left_y, play_width, play_height), 4)
 
             draw_grid(surface, grid)
             # pygame.display.update()
+
+            if self.fall_speed < 0.18:
+                spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+                surface.blit(spr, (265,400))
 
         
         def main(win):
@@ -357,7 +371,7 @@ class Tetris(Frame):
             next_piece = get_shape()
             clock = pygame.time.Clock()
             fall_time = 0
-            fall_speed = 0.25
+            self.fall_speed = 0.25
             level_time = 0
             score = 0
 
@@ -366,13 +380,24 @@ class Tetris(Frame):
                 fall_time += clock.get_rawtime()
                 level_time += clock.get_rawtime()
                 clock.tick()
+                # create spr
+                # spr = PhotoImage(file="sprites/mikan/mikan_sad.png")
+                # w= Label (self,
+                #     image = spr, 
+                #         )
+                # w.photo = spr # saving the image as a property is required for "saving" the image. It's odd.
+                # # grid the image
+                # w.grid(row = 5, column = 1)
+
+                # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+                # surface.blit(spr, (265,400))
 
                 if level_time/1000 > 5:
                     level_time = 0
-                    if fall_speed > 0.12:
-                        fall_speed -= 0.005
+                    if self.fall_speed > 0.12:
+                        self.fall_speed -= 0.005
 
-                if fall_time/1000 > fall_speed:
+                if fall_time/1000 > self.fall_speed:
                     fall_time = 0
                     current_piece.y += 1
                     if not(valid_space(current_piece, grid)) and current_piece.y > 0:
