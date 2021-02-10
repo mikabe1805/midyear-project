@@ -45,8 +45,8 @@ class Ball(object):
         self.w = w
         self.h = h
         self.color = color
-        self.xv = random.choice([2, 3, 4, -2, -3, -4])
-        self.yv = random.randint(3, 4)
+        self.xv = 5
+        self.yv = 5
         self.xx = self.x + self.w
         self.yy = self.y + self.h
 
@@ -77,7 +77,7 @@ bricks = []
 def init():
     global bricks
     bricks = []
-    for i in range(6):
+    for i in range(4):
         for j in range(10):
             bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
 
@@ -105,7 +105,7 @@ def redrawGameWindow():
     pygame.display.update()
 
 player = Paddle(sw/2 - 50, sh - 100, 125, 20, (MAGENTA))
-ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
+ball = Ball(sw/2 - 10, sh - 50, 20, 20, (MAGENTA))
 balls = [ball]
 init()
 
@@ -161,7 +161,7 @@ while run:
                 balls.append(ball)
 
             bricks.clear()
-            for i in range(6):
+            for i in range(4):
                 for j in range(10):
                     bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
 
