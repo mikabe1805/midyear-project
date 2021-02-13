@@ -2,6 +2,7 @@
 # image of mikan will not show up until player starts losing
 import pygame
 import random
+import simpleaudio as sa
 from tkinter import *
 
 class Tetris(Frame):
@@ -404,6 +405,21 @@ class Tetris(Frame):
             #     # surface.blit(spr_big, (80,240))
             #     surface.blit(spr_big, (-90,120))
 
+        # def regularMusic():
+        #     winsound.PlaySound("voice_lines/fashionWeek.mp3", winsound.SND_ASYNC)
+
+        self.play = 0
+        def PTA():
+            if self.play == 0:
+                filename = 'voice_lines/Angry_Mikan.wav'
+                wave_obj = sa.WaveObject.from_wave_file(filename)
+                self.play_obj = wave_obj.play()
+                if self.play_obj.is_playing():
+                    self.play = 1
+                else:
+                    self.play = 0
+
+
         
         def main(win):
             high_score = max_score()
@@ -425,6 +441,13 @@ class Tetris(Frame):
                 fall_time += clock.get_rawtime()
                 level_time += clock.get_rawtime()
                 clock.tick()
+                # if not check_losing1(self.locked_positions):
+                #     regularMusic()
+                # else:
+                #     PTA()
+                if check_losing1(self.locked_positions):
+                    PTA()
+                
                 # create spr
                 # spr = PhotoImage(file="sprites/mikan/mikan_sad.png")
                 # w= Label (self,
@@ -503,6 +526,9 @@ class Tetris(Frame):
                     draw_text_middle2("YOU LOST", "TIME FOR PUNISHMENT", 65, (180, 0, 0), win)
                     pygame.display.update()
                     pygame.time.delay(4000)
+                    if self.play != 0:
+                        self.play_obj.stop()
+                        self.play = 0
                     # draw_text_middle(win, "TIME FOR PUNISHMENT", 80, (255, 255, 255))
                     run = False
                     update_score(score)
@@ -518,6 +544,9 @@ class Tetris(Frame):
                 pygame.display.update()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
+                        if self.play != 0:
+                            self.play_obj.stop()
+                            self.play = 0
                         run = False
                         self.callback()
                         # maybe bring it back to game select over here
