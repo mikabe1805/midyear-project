@@ -342,6 +342,9 @@ class Tetris(Frame):
 
             return score
 
+        self.s = 1
+        self.counter = 50
+        self.load = 2
         def draw_window(surface, grid, score=0, high_score=0):
             # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
             surface.fill((0, 0, 0))
@@ -379,8 +382,29 @@ class Tetris(Frame):
                     pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size), 0)
             
             # gggg
+            if not check_losing1(self.locked_positions):
+                # changes sprite with the beat
+                if self.counter == 50:
+                    # make it so sprites won't repeat, breaking the beat
+                    self.load = random.choice([i for i in range(1,4) if i not in [self.load]])
+                    self.counter = 0
+                spr = pygame.image.load('sprites/mikan/happy'+str(self.load)+'.png')
+                spr.set_alpha(100)
+                # spr.set_alpha(self.s/50)
+                # if self.s < 5000:
+                #     self.s += 1
+
+                surface.blit(spr, (265,400))
+                self.counter += 1
+            
             if check_losing1(self.locked_positions):
+                # spr.destroy()
                 spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+                spr.set_alpha(100)
+                # spr.set_alpha(self.s/50)
+                # if self.s < 5000:
+                #     self.s += 1
+
                 surface.blit(spr, (265,400))
                 
 
@@ -397,6 +421,7 @@ class Tetris(Frame):
 
             if check_losing2(self.locked_positions):
                 spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+                spr.set_alpha(100)
                 surface.blit(spr, (265,400))
 
             # if check_losing3(self.locked_positions):
@@ -405,19 +430,31 @@ class Tetris(Frame):
             #     # surface.blit(spr_big, (80,240))
             #     surface.blit(spr_big, (-90,120))
 
-        # def regularMusic():
-        #     winsound.PlaySound("voice_lines/fashionWeek.mp3", winsound.SND_ASYNC)
-
+        self.play2 = 0
         self.play = 0
+
+        def regularMusic():
+            if self.play2 == 0:
+                filename = 'voice_lines/Mikan.wav'
+                wave_obj = sa.WaveObject.from_wave_file(filename)
+                self.play_obj2 = wave_obj.play()
+            if self.play_obj2.is_playing():
+                self.play2 = 1
+            else:
+                self.play2 = 0
+            if self.play == 1:
+                self.play_obj2.stop()
+
+
         def PTA():
             if self.play == 0:
                 filename = 'voice_lines/Angry_Mikan.wav'
                 wave_obj = sa.WaveObject.from_wave_file(filename)
                 self.play_obj = wave_obj.play()
-                if self.play_obj.is_playing():
-                    self.play = 1
-                else:
-                    self.play = 0
+            if self.play_obj.is_playing():
+                self.play = 1
+            else:
+                self.play = 0
 
 
         
@@ -441,12 +478,13 @@ class Tetris(Frame):
                 fall_time += clock.get_rawtime()
                 level_time += clock.get_rawtime()
                 clock.tick()
-                # if not check_losing1(self.locked_positions):
-                #     regularMusic()
-                # else:
-                #     PTA()
-                if check_losing1(self.locked_positions):
+                if not check_losing1(self.locked_positions):
+                    regularMusic()
+                else:
+                    self.play_obj2.stop()
                     PTA()
+                # if check_losing1(self.locked_positions):
+                #     PTA()
                 
                 # create spr
                 # spr = PhotoImage(file="sprites/mikan/mikan_sad.png")
@@ -526,6 +564,9 @@ class Tetris(Frame):
                     draw_text_middle2("YOU LOST", "TIME FOR PUNISHMENT", 65, (180, 0, 0), win)
                     pygame.display.update()
                     pygame.time.delay(4000)
+                    if self.play2 != 0:
+                        self.play_obj2.stop()
+                        self.play2 = 0
                     if self.play != 0:
                         self.play_obj.stop()
                         self.play = 0
@@ -547,6 +588,9 @@ class Tetris(Frame):
                         if self.play != 0:
                             self.play_obj.stop()
                             self.play = 0
+                        if self.play2 != 0:
+                            self.play_obj2.stop()
+                            self.play2 = 0
                         run = False
                         self.callback()
                         # maybe bring it back to game select over here
