@@ -480,6 +480,8 @@ class Tetris(Frame):
                 clock.tick()
                 if not check_losing1(self.locked_positions):
                     regularMusic()
+                    if self.play == 1:
+                        self.play_obj.stop()
                 else:
                     self.play_obj2.stop()
                     PTA()
