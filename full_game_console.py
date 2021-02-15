@@ -36,7 +36,7 @@ class manager (object):
         self.root.title ("Tetris")
 
         # Creates and displays a Prepare To Battle screen
-        self.current_screen = Tetris(master = self.root, callback_on_selected = self.onclose_tetris)
+        self.current_screen = Tetris(master = self.root, character = 'chiaki',callback_on_selected = self.onclose_tetris)
 
     def onclose_tetris (self):
         

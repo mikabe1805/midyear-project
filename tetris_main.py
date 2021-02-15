@@ -7,9 +7,10 @@ from tkinter import *
 
 class Tetris(Frame):
    """ I'm trying ;-; """
-   def __init__(self, master, callback_on_selected):
+   def __init__(self, master, character, callback_on_selected):
         super().__init__(master)
         self.callback = callback_on_selected
+        self.character = character
         self.grid()
         self.play_tetris()
 
@@ -386,9 +387,9 @@ class Tetris(Frame):
                 # changes sprite with the beat
                 if self.counter == 88:
                     # make it so sprites won't repeat, breaking the beat
-                    self.load = random.choice([i for i in range(1,4) if i not in [self.load]])
+                    self.load = random.choice([i for i in range(1,13) if i not in [self.load]])
                     self.counter = 0
-                spr = pygame.image.load('sprites/mikan/happy'+str(self.load)+'.png')
+                spr = pygame.image.load('sprites/'+self.character+'/happy'+str(self.load)+'.png')
                 spr.set_alpha(100)
                 # spr.set_alpha(self.s/50)
                 # if self.s < 5000:
@@ -399,7 +400,7 @@ class Tetris(Frame):
             
             if check_losing1(self.locked_positions):
                 # spr.destroy()
-                spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+                spr = pygame.image.load('sprites/'+self.character+'/scary.png')
                 spr.set_alpha(100)
                 # spr.set_alpha(self.s/50)
                 # if self.s < 5000:
@@ -420,7 +421,7 @@ class Tetris(Frame):
             # pygame.display.update()
 
             if check_losing2(self.locked_positions):
-                spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+                spr = pygame.image.load('sprites/'+self.character+'/scary.png')
                 spr.set_alpha(100)
                 surface.blit(spr, (265,400))
 
@@ -435,7 +436,7 @@ class Tetris(Frame):
 
         def regularMusic():
             if self.play2 == 0:
-                filename = 'voice_lines/Mikan.wav'
+                filename = 'voice_lines/'+self.character+'/happy.wav'
                 wave_obj = sa.WaveObject.from_wave_file(filename)
                 self.play_obj2 = wave_obj.play()
             if self.play_obj2.is_playing():
@@ -448,7 +449,8 @@ class Tetris(Frame):
 
         def PTA():
             if self.play == 0:
-                filename = 'voice_lines/Angry_Mikan.wav'
+                # change to self.character later
+                filename = 'voice_lines/mikan/angry.wav'
                 wave_obj = sa.WaveObject.from_wave_file(filename)
                 self.play_obj = wave_obj.play()
             if self.play_obj.is_playing():
@@ -566,7 +568,7 @@ class Tetris(Frame):
                 draw_window(win, grid, score, high_score)
                 draw_next_shape(next_piece, win)
                 if check_losing3(self.locked_positions):
-                    spr = pygame.image.load('sprites/mikan/mikan_sad.png')
+                    spr = pygame.image.load('sprites/'+self.character+'/scary.png')
                     spr_big = pygame.transform.rotozoom(spr, 0, 3.5)
                     # surface.blit(spr_big, (80,240))
                     win.blit(spr_big, (-90,120))
