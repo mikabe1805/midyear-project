@@ -387,7 +387,7 @@ class Tetris(Frame):
                 # changes sprite with the beat
                 if self.counter == 88:
                     # make it so sprites won't repeat, breaking the beat
-                    self.load = random.choice([i for i in range(1,13) if i not in [self.load]])
+                    self.load = random.choice([i for i in range(1,12) if i not in [self.load]])
                     self.counter = 0
                 spr = pygame.image.load('sprites/'+self.character+'/happy'+str(self.load)+'.png')
                 spr.set_alpha(100)
