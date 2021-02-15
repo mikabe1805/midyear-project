@@ -593,6 +593,12 @@ class Tetris(Frame):
                 win.fill((0, 0, 0))
                 # TODO: make it so the font for this is different
                 # TODO: add a "return to game select" button
+                if self.play != 0:
+                    self.play_obj.stop()
+                    self.play = 0
+                if self.play2 != 0:
+                    self.play_obj2.stop()
+                    self.play2 = 0
                 draw_text_middle('Press Any Key To Play', 60, (255, 255, 255), win)
                 pygame.display.update()
                 for event in pygame.event.get():
