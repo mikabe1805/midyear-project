@@ -518,22 +518,32 @@ class Tetris(Frame):
                     
                     # move the pieces
                     if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_LEFT:
+                        # make both the arrows and WASD available
+                        if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                             current_piece.x -= 1
                             if not(valid_space(current_piece, grid)):
                                 current_piece.x += 1
-                        if event.key == pygame.K_RIGHT:
+                        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                             current_piece.x += 1
                             if not(valid_space(current_piece, grid)):
                                 current_piece.x -= 1
-                        if event.key == pygame.K_DOWN:
+                        if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                             current_piece.y += 1
                             if not(valid_space(current_piece, grid)):
                                 current_piece.y -= 1
-                        if event.key == pygame.K_UP:
+                        if event.key == pygame.K_UP or event.key == pygame.K_w:
                             current_piece.rotation += 1
                             if not(valid_space(current_piece, grid)):
                                 current_piece.rotation -= 1
+                        if event.key == pygame.K_SPACE:
+                            while valid_space(current_piece, grid):
+                                current_piece.y += 1
+                            if not(valid_space(current_piece, grid)):
+                                current_piece.y -= 1
+                            # while valid_space(current_piece, grid):
+                            #     current_piece.y += 1
+                            # # if not(valid_space(current_piece, grid)):
+                            # #     current_piece.y -= 1
 
                 shape_pos = convert_shape_format(current_piece)
 
