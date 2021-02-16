@@ -344,7 +344,9 @@ class Tetris(Frame):
             return score
 
         self.s = 1
-        self.counter = 88
+        # 88 is one beat
+        # 3 short beats one long beat??
+        self.idk = 188
         self.load = 2
         def draw_window(surface, grid, score=0, high_score=0):
             # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
@@ -385,9 +387,9 @@ class Tetris(Frame):
             # gggg
             if not check_losing1(self.locked_positions):
                 # changes sprite with the beat
-                if self.counter == 88:
+                if self.counter == self.idk:
                     # make it so sprites won't repeat, breaking the beat
-                    self.load = random.choice([i for i in range(1,9) if i not in [self.load]])
+                    self.load = random.choice([i for i in range(1,20) if i not in [self.load]])
                     self.counter = 0
                 spr = pygame.image.load('sprites/'+self.character+'/happy'+str(self.load)+'.png')
                 spr.set_alpha(100)
@@ -546,6 +548,9 @@ class Tetris(Frame):
                             #     current_piece.y += 1
                             # # if not(valid_space(current_piece, grid)):
                             # #     current_piece.y -= 1
+                        # for bug fixing
+                        if event.key == pygame.K_r:
+                            score += 10
 
                 shape_pos = convert_shape_format(current_piece)
 
@@ -602,6 +607,7 @@ class Tetris(Frame):
                     self.play_obj2.stop()
                     self.play2 = 0
                 draw_text_middle('Press Any Key To Play', 60, (255, 255, 255), win)
+                self.counter = self.idk
                 pygame.display.update()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
