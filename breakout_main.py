@@ -14,14 +14,14 @@ BLACK = (0, 0, 0)
 DARKPURPLE = (84, 22, 180)
 MAGENTA = (228, 0, 224)
 
+# lives
+lives = 3
+
 # background
 bg = pygame.image.load('hopespeak.png')
 
 # clock for fps
 clock = pygame.time.Clock()
-
-# game over
-gameover = False
 
 # paddle
 class Paddle(object):
@@ -70,7 +70,7 @@ class Brick(object):
         self.yy = self.y + self.h
 
         self.ranNum = random.randint(0,10)
-        if self.ranNum < 2:
+        if self.ranNum < 1:
             self.pregnant = True
         else:
             self.pregnant = False
@@ -95,16 +95,18 @@ def redrawGameWindow():
     for b in bricks:
         b.draw(win)
 
-    font = pygame.font.SysFont('comicsans', 50)
+    font = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 30)
+
+    tLives = font.render("Lives: " + str(lives), 1, BLACK)
+    win.blit(tLives, (20,500))
 
 # game over
-    if gameover:
-        if len(bricks) == 0:
-            resText = font.render("Why did you slay..", 1, (MAGENTA))
-        else:
-            resText = font.render("You flopped asl...", 1, (MAGENTA))
+    if len(bricks) == 0:
+        resText = font.render("Why did you slay..", 1, (DARKPURPLE))
+    if lives == 0:
+        resText = font.render("You flopped asl...", 1, (DARKPURPLE))
         win.blit(resText, ((sw//2 - resText.get_width()//2), sh//2 - resText.get_height()//2))
-        playAgainText = font.render("Press Space to Play Again", 1, (MAGENTA))
+        playAgainText = font.render("Press Space to Play Again", 1, (DARKPURPLE))
         win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
 
     pygame.display.update()
@@ -117,7 +119,7 @@ init()
 run = True
 while run:
     clock.tick(100)
-    if not gameover:
+    if lives != 0:
         for ball in balls:
             ball.move()
         if pygame.mouse.get_pos()[0] - player.w//2 < 0:
@@ -160,16 +162,14 @@ while run:
 
 
         if len(balls) == 0:
-            gameover = True
+            ball = Ball(sw/2 - 10, sh - 300, 20, 20, (MAGENTA))
+            balls.append(ball)
+            lives -= 1
 
     keys = pygame.key.get_pressed()
-    if len(bricks) == 0:
-        won = True
-        gameover = True
-    if gameover:
+    if lives == 0:
         if keys[pygame.K_SPACE]:
-            gameover = False
-            won = False
+            lives = 3
             ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
             if len(balls) == 0:
                 balls.append(ball)
