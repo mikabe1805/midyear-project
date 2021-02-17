@@ -15,7 +15,7 @@ DARKPURPLE = (84, 22, 180)
 MAGENTA = (228, 0, 224)
 
 # lives
-lives = 3
+lives = 4
 
 # background
 bg = pygame.image.load('hopespeak.png')
@@ -82,7 +82,7 @@ bricks = []
 def init():
     global bricks
     bricks = []
-    for i in range(5):
+    for i in range(4):
         for j in range(10):
             bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
 
@@ -100,9 +100,12 @@ def redrawGameWindow():
     tLives = font.render("Lives: " + str(lives), 1, BLACK)
     win.blit(tLives, (20,500))
 
-# game over
+# win
     if len(bricks) == 0:
-        resText = font.render("Why did you slay..", 1, (DARKPURPLE))
+        winText = font.render("Why did you slay..", 1, (DARKPURPLE))
+        win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - winText.get_height()//2))
+
+# game over
     if lives == 0:
         resText = font.render("You flopped asl...", 1, (DARKPURPLE))
         win.blit(resText, ((sw//2 - resText.get_width()//2), sh//2 - resText.get_height()//2))
@@ -119,7 +122,7 @@ init()
 run = True
 while run:
     clock.tick(100)
-    if lives != 0:
+    if lives > 0 and len(bricks) != 0:
         for ball in balls:
             ball.move()
         if pygame.mouse.get_pos()[0] - player.w//2 < 0:
@@ -169,12 +172,12 @@ while run:
     keys = pygame.key.get_pressed()
     if lives == 0:
         if keys[pygame.K_SPACE]:
-            lives = 3
+            lives = 4
             ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
             if len(balls) == 0:
                 balls.append(ball)
             bricks.clear()
-            for i in range(5):
+            for i in range(4):
                 for j in range(10):
                     bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
 
