@@ -184,6 +184,12 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        if event.type == pygame.KEYDOWN:
+            # make both the arrows and WASD available
+            if event.key == pygame.K_r:
+                # for brick in bricks:
+                #     bricks.pop(bricks.index(brick))
+                bricks.clear()
     redrawGameWindow()
 
 pygame.quit()
