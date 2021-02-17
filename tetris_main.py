@@ -1,4 +1,5 @@
 # I hate github
+# I still hate github
 # image of mikan will not show up until player starts losing
 import pygame
 import random
