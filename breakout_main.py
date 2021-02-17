@@ -15,7 +15,7 @@ DARKPURPLE = (84, 22, 180)
 MAGENTA = (228, 0, 224)
 
 # lives
-lives = 4
+lives = 3
 
 # background
 bg = pygame.image.load('hopespeak.png')
@@ -69,7 +69,7 @@ class Brick(object):
         self.xx = self.x + self.w
         self.yy = self.y + self.h
 
-        self.ranNum = random.randint(0,10)
+        self.ranNum = random.randint(0,8)
         if self.ranNum < 1:
             self.pregnant = True
         else:
@@ -82,7 +82,7 @@ bricks = []
 def init():
     global bricks
     bricks = []
-    for i in range(4):
+    for i in range(5):
         for j in range(10):
             bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
 
@@ -104,6 +104,8 @@ def redrawGameWindow():
     if len(bricks) == 0:
         winText = font.render("Why did you slay..", 1, (DARKPURPLE))
         win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - winText.get_height()//2))
+        playAgainText = font.render("Press Space to Play Again", 1, (DARKPURPLE))
+        win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
 
 # game over
     if lives == 0:
@@ -170,14 +172,14 @@ while run:
             lives -= 1
 
     keys = pygame.key.get_pressed()
-    if lives == 0:
+    if lives == 0 or len(bricks) == 0:
         if keys[pygame.K_SPACE]:
-            lives = 4
+            lives = 3
             ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
             if len(balls) == 0:
                 balls.append(ball)
             bricks.clear()
-            for i in range(4):
+            for i in range(5):
                 for j in range(10):
                     bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
 
@@ -185,10 +187,7 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         if event.type == pygame.KEYDOWN:
-            # make both the arrows and WASD available
-            if event.key == pygame.K_r:
-                # for brick in bricks:
-                #     bricks.pop(bricks.index(brick))
+            if event.key == pygame.K_w:
                 bricks.clear()
     redrawGameWindow()
 
