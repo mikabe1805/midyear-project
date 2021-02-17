@@ -45,7 +45,7 @@ class Ball(object):
         self.w = w
         self.h = h
         self.color = color
-        self.xv = 5
+        self.xv = random.choice([2, 3, 4, -2, -3, -4])
         self.yv = 5
         self.xx = self.x + self.w
         self.yy = self.y + self.h
@@ -69,6 +69,11 @@ class Brick(object):
         self.xx = self.x + self.w
         self.yy = self.y + self.h
 
+        self.ranNum = random.randint(0,10)
+        if self.ranNum < 2:
+            self.pregnant = True
+        else:
+            self.pregnant = False
 
     def draw(self, win):
         pygame.draw.rect(win, self.color, [self.x, self.y, self.w, self.h])
@@ -77,7 +82,7 @@ bricks = []
 def init():
     global bricks
     bricks = []
-    for i in range(4):
+    for i in range(5):
         for j in range(10):
             bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
 
@@ -113,7 +118,8 @@ run = True
 while run:
     clock.tick(100)
     if not gameover:
-        ball.move()
+        for ball in balls:
+            ball.move()
         if pygame.mouse.get_pos()[0] - player.w//2 < 0:
             player.x = 0
         elif pygame.mouse.get_pos()[0] + player.w//2 > sw:
@@ -128,24 +134,32 @@ while run:
                     ball.yv *= -1
                     ball.y = player.y -ball.h -1
 
-        if ball.x + ball.w >= sw:
-            ball.xv *= -1
-        if ball.x < 0:
-            ball.xv *= -1
-        if ball.y <= 0:
-            ball.yv *= -1
-        
-        if ball.y > sh:
-            balls.pop(balls.index(ball))
+            if ball.x + ball.w >= sw:
+                ball.xv *= -1
+            if ball.x < 0:
+                ball.xv *= -1
+            if ball.y <= 0:
+                ball.yv *= -1
+            
+            if ball.y > sh:
+                balls.pop(balls.index(ball))
 
         for brick in bricks:
-            if (ball.x >= brick.x and ball.x <= brick.x + brick.w) or ball.x + ball.w >= brick.x and ball.x + ball.w <= brick.x + brick.w:
-                if (ball.y >= brick.y and ball.y <= brick.y + brick.h) or ball.y + ball.h >= brick.y and ball.y + ball.h <= brick.y + brick.h:
-                    brick.visible = False
-                    bricks.pop(bricks.index(brick))
-                    ball.yv *= -1
+            for ball in balls:
+                if (ball.x >= brick.x and ball.x <= brick.x + brick.w) or ball.x + ball.w >= brick.x and ball.x + ball.w <= brick.x + brick.w:
+                    if (ball.y >= brick.y and ball.y <= brick.y + brick.h) or ball.y + ball.h >= brick.y and ball.y + ball.h <= brick.y + brick.h:
+                        brick.visible = False
+                        if brick.pregnant:
+                            balls.append(Ball(brick.x, brick.y, 20, 20, (MAGENTA)))
+                        ball.yv *= -1
+                        break
 
-        if ball.y > sh:
+        for brick in bricks:
+            if brick.visible == False:
+                bricks.pop(bricks.index(brick))
+
+
+        if len(balls) == 0:
             gameover = True
 
     keys = pygame.key.get_pressed()
@@ -159,9 +173,8 @@ while run:
             ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
             if len(balls) == 0:
                 balls.append(ball)
-
             bricks.clear()
-            for i in range(4):
+            for i in range(5):
                 for j in range(10):
                     bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
 
