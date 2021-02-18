@@ -210,6 +210,9 @@ class Breakout(Frame):
                 if lives == 0:
                     loseSound.play()
 
+                if score == 50 and lives == 1:
+                    lives += 1
+
             keys = pygame.key.get_pressed()
             if lives == 0:
                 if score > int(hiscore):
@@ -235,6 +238,7 @@ class Breakout(Frame):
                     for i in range(5):
                         for j in range(10):
                             bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
