@@ -8,10 +8,11 @@ from tkinter import *
 
 class Tetris(Frame):
    """ I'm trying ;-; """
-   def __init__(self, master, character, callback_on_selected):
+   def __init__(self, master, character, limit, callback_on_selected):
         super().__init__(master)
         self.callback = callback_on_selected
         self.character = character
+        self.limit = limit
         self.grid()
         self.play_tetris()
 
@@ -390,7 +391,7 @@ class Tetris(Frame):
                 # changes sprite with the beat
                 if self.counter == self.idk:
                     # make it so sprites won't repeat, breaking the beat
-                    self.load = random.choice([i for i in range(1,20) if i not in [self.load]])
+                    self.load = random.choice([i for i in range(1,self.limit) if i not in [self.load]])
                     self.counter = 0
                 spr = pygame.image.load('sprites/'+self.character+'/happy'+str(self.load)+'.png')
                 spr.set_alpha(100)

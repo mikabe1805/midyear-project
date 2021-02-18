@@ -17,6 +17,14 @@ class CharacterRoster (object):
             character = Character (my_fields[0], int(my_fields[1]))
             self.character_list.append(character)
         
+    def get_character (self, i):
+        ''' 
+        Gets and returns the "ith" Character from the list, then removes the 
+        character from the list.  (Removal so prevents the user and computer from 
+        using the same character).
+        '''
+        ch = self.character_list[i]
+        return ch
     
     def get_number_of_characters (self):
         ''' Returns the number of Characters in the roster. '''
