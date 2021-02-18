@@ -8,7 +8,6 @@ class Application(Frame):
         self.callback = callback_on_selected
         self.grid()
         self.create_widgets()
-        self.g = 0
 
     def create_widgets(self):
         """ Create button, text, and entry widgets. """

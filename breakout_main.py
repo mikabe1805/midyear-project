@@ -30,7 +30,7 @@ class Breakout(Frame):
         lives = 3
 
         # background
-        bg = pygame.image.load('hopespeak.png')
+        bg = pygame.image.load('sprites/hopespeak.png')
 
         # clock for fps
         clock = pygame.time.Clock()
