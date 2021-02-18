@@ -59,7 +59,7 @@ class manager (object):
             # Changes the window's title
             self.root.title ("Tetris")
             # Creates and displays a Prepare To Battle screen
-            self.current_screen = Tetris(master = self.root, character = self.char.name, limit = self.char.sprite_num, callback_on_selected = self.onclose_tetris)
+            self.current_screen = Tetris(master = self.root, character = self.char.name, limit = self.char.sprite_num, x = self.char.x, y = self.char.y, x2 = self.char.x2, callback_on_selected = self.onclose_tetris)
 
         elif game == "Breakout":
             # self.setup_breakout()

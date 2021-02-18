@@ -1,8 +1,8 @@
-celestia:15
-chiaki:13
-chihiro:12
-junko:9
-kazuichi:24
-nagito:20
-sakura:9
-taka:13
+celestia:15:290:500:-120
+chiaki:13:305:430:80
+chihiro:12:320:430:110
+junko:9:290:500:65
+kazuichi:24:275:450:50
+nagito:20:290:450:-130
+sakura:9:243:497:-140
+taka:13:310:460:50
