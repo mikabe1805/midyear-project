@@ -26,8 +26,9 @@ class Breakout(Frame):
         DARKPURPLE = (84, 22, 180)
         MAGENTA = (228, 0, 224)
 
-        # lives
+        # lives and score
         lives = 3
+        score = 0
 
         # background
         bg = pygame.image.load('hopespeak.png')
@@ -111,6 +112,8 @@ class Breakout(Frame):
 
             tLives = font.render("Lives: " + str(lives), 1, BLACK)
             win.blit(tLives, (20,500))
+            tscore = font.render("Score: " + str(score), 1, BLACK)
+            win.blit(tscore, (20,450))
 
         # win
             if len(bricks) == 0:
@@ -171,6 +174,7 @@ class Breakout(Frame):
                                 if brick.pregnant:
                                     balls.append(Ball(brick.x, brick.y, 20, 20, (MAGENTA)))
                                 ball.yv *= -1
+                                score += 1
                                 break
 
                 for brick in bricks:
@@ -187,6 +191,7 @@ class Breakout(Frame):
             if lives == 0 or len(bricks) == 0:
                 if keys[pygame.K_SPACE]:
                     lives = 3
+                    score = 0
                     ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
                     if len(balls) == 0:
                         balls.append(ball)
