@@ -394,17 +394,25 @@ class Tetris(Frame):
                     self.counter = 0
                 spr = pygame.image.load('sprites/'+self.character+'/happy'+str(self.load)+'.png')
                 spr.set_alpha(100)
+                regularMusic()
+                if self.play == 1:
+                    self.play_obj.stop()
+                    self.play = 0
                 # spr.set_alpha(self.s/50)
                 # if self.s < 5000:
                 #     self.s += 1
 
                 surface.blit(spr, (265,400))
                 self.counter += 1
-            
+
+
             if check_losing1(self.locked_positions):
                 # spr.destroy()
                 spr = pygame.image.load('sprites/'+self.character+'/scary.png')
                 spr.set_alpha(100)
+                self.play2 = 0
+                self.play_obj2.stop()
+                PTA()
                 # spr.set_alpha(self.s/50)
                 # if self.s < 5000:
                 #     self.s += 1
@@ -483,13 +491,14 @@ class Tetris(Frame):
                 fall_time += clock.get_rawtime()
                 level_time += clock.get_rawtime()
                 clock.tick()
-                if not check_losing1(self.locked_positions):
-                    regularMusic()
-                    if self.play == 1:
-                        self.play_obj.stop()
-                else:
-                    self.play_obj2.stop()
-                    PTA()
+                #gggg
+                # if not check_losing1(self.locked_positions):
+                #     regularMusic()
+                #     if self.play == 1:
+                #         self.play_obj.stop()
+                # else:
+                #     self.play_obj2.stop()
+                #     PTA()
                 # if check_losing1(self.locked_positions):
                 #     PTA()
                 
@@ -552,6 +561,24 @@ class Tetris(Frame):
                         # for bug fixing
                         if event.key == pygame.K_r:
                             score += 10
+                        
+                        # deletes all blocks placed
+                        if event.key == pygame.K_g:
+                            inc = 0
+                            for i in range(len(grid)-1, -1, -1):
+                                row = grid[i]
+                                inc += 1
+                                ind = i
+                                for j in range(len(row)):
+                                    try:
+                                        del self.locked_positions[(j, i)]
+                                    except:
+                                        continue
+                            for key in sorted(list(self.locked_positions), key = lambda x: x[1])[::-1]:
+                                x,y = key
+                                if y < ind:
+                                    newkey = (x,y + inc)
+                                    self.locked_positions[newkey] = self.locked_positions.pop(key)
 
                 shape_pos = convert_shape_format(current_piece)
 

@@ -2,6 +2,7 @@ import tkinter
 
 from mini_game_select import Application
 from tetris_main import Tetris
+from breakout_main import Breakout
 
 class manager (object):
 
@@ -21,15 +22,16 @@ class manager (object):
                                                         callback_on_selected = self.onclose_character_selection
                                                         )
     
-    def onclose_character_selection (self):
-        
+    def onclose_character_selection (self, game):
         # Destroys the Character Selection window
         self.current_screen.destroy()
 
 
-        # if game == "Tetris":
+        if game == "Tetris":
             # Continue on - set up the Prepare To Battle screen!
-        self.setup_tetris()
+            self.setup_tetris()
+        elif game == "Breakout":
+            self.setup_breakout()
 
     def setup_tetris(self):
         # Changes the window's title
@@ -37,6 +39,13 @@ class manager (object):
 
         # Creates and displays a Prepare To Battle screen
         self.current_screen = Tetris(master = self.root, character = 'nagito', callback_on_selected = self.onclose_tetris)
+
+    def setup_breakout(self):
+        # Changes the window's title
+        self.root.title ("Breakout")
+
+        # Creates and displays a Prepare To Battle screen
+        self.current_screen = Breakout(master = self.root, character = 'nagito', callback_on_selected = self.onclose_tetris)
 
     def onclose_tetris (self):
         
