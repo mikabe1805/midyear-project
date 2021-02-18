@@ -27,7 +27,7 @@ class Breakout(Frame):
         bounceSound.set_volume(.2)
         loseSound.set_volume(.4)
         brickHitSound.set_volume(.2)
-
+        
         # define colors
         BLACK = (0, 0, 0)
         DARKPURPLE = (84, 22, 180)
@@ -39,12 +39,15 @@ class Breakout(Frame):
         lives = 3
         score = 0
 
+        with open("hiscore.txt", "r") as f:
+            hiscore = f.read()
+            
         # background
         bg = pygame.image.load('hopespeak.png')
 
         # clock for fps
         clock = pygame.time.Clock()
-
+        
         # paddle
         class Paddle(object):
             def __init__(self, x, y, w, h, color):
@@ -124,7 +127,7 @@ class Breakout(Frame):
             win.blit(tLives, (20,500))
             tscore = font.render("Score: " + str(score), 1, BLACK)
             win.blit(tscore, (20,450))
-            tHS = font.render("HS: " + str(score), 1, RED)
+            tHS = font.render("HS: " + str(hiscore), 1, RED)
             win.blit(tHS, (20,400))
             tLevel = font.render("Level: " + str(score // 50 + 1), 1, BLUE)
             win.blit(tLevel, (20,250))
@@ -209,6 +212,10 @@ class Breakout(Frame):
 
             keys = pygame.key.get_pressed()
             if lives == 0:
+                if score > int(hiscore):
+                    hiscore = score
+                with open("hiscore.txt", "w") as f:
+                    f. write(str(hiscore))
                 if keys[pygame.K_SPACE]:
                     loseSound.stop()
                     lives = 3
