@@ -27,17 +27,11 @@ class manager (object):
            
         selected_char_index = int (selected_char_index)
         
-        # Gets the player's chosen Character
-        self.player = self.character_roster.get_and_remove_character(selected_char_index)
-        
-        # Gets a different random Character for the computer.
-        self.computer = self.character_roster.get_random_character()
-        
         # Destroys the Character Selection window
         self.current_screen.destroy()
 
         # Continue on - set up the Prepare To Battle screen!
-        self.setup_prepare_to_battle()
+        self.setup_second()
 
     def setup_second (self):
         '''
