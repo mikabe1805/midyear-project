@@ -117,6 +117,7 @@ class Breakout(Frame):
                 b.draw(win)
 
             font = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 30)
+            font2 = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 25)
 
             tLives = font.render("Lives: " + str(lives), 1, BLACK)
             win.blit(tLives, (20,500))
@@ -125,9 +126,9 @@ class Breakout(Frame):
 
         # win
             if len(bricks) == 0:
-                winText = font.render("Why did you slay..", 1, (DARKPURPLE))
+                winText = font.render("Level Complete", 1, (DARKPURPLE))
                 win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - winText.get_height()//2))
-                playAgainText = font.render("Press Space to Play Again", 1, (DARKPURPLE))
+                playAgainText = font2.render("Press space to continue to the next level", 1, (DARKPURPLE))
                 win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
 
         # game over
@@ -143,7 +144,7 @@ class Breakout(Frame):
         ball = Ball(sw/2 - 10, sh - 50, 20, 20, (MAGENTA))
         balls = [ball]
         init()
-        
+
         run = True
         while run:
             clock.tick(100)
@@ -203,7 +204,7 @@ class Breakout(Frame):
                     loseSound.play()
 
             keys = pygame.key.get_pressed()
-            if lives == 0 or len(bricks) == 0:
+            if lives == 0:
                 if keys[pygame.K_SPACE]:
                     loseSound.stop()
                     lives = 3
@@ -215,11 +216,18 @@ class Breakout(Frame):
                     for i in range(5):
                         for j in range(10):
                             bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
-
+            if len(bricks) == 0:
+                if keys[pygame.K_SPACE]:
+                    lives += 1
+                    ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
+                    balls.clear()
+                    balls.append(ball)
+                    for i in range(5):
+                        for j in range(10):
+                            bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
-                    self.callback()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_w:
                         bricks.clear()
