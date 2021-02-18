@@ -29,10 +29,11 @@ class Breakout(Frame):
         brickHitSound.set_volume(.2)
 
         # define colors
-        WHITE = (255, 255, 255)
         BLACK = (0, 0, 0)
         DARKPURPLE = (84, 22, 180)
         MAGENTA = (228, 0, 224)
+        RED = (255, 0, 0)
+        BLUE = (0, 181, 236)
 
         # lives and score
         lives = 3
@@ -123,7 +124,11 @@ class Breakout(Frame):
             win.blit(tLives, (20,500))
             tscore = font.render("Score: " + str(score), 1, BLACK)
             win.blit(tscore, (20,450))
-
+            tHS = font.render("HS: " + str(score), 1, RED)
+            win.blit(tHS, (20,400))
+            tLevel = font.render("Level: " + str(score // 50 + 1), 1, BLUE)
+            win.blit(tLevel, (20,250))
+            
         # win
             if len(bricks) == 0:
                 winText = font.render("Level Complete", 1, (DARKPURPLE))
@@ -194,7 +199,6 @@ class Breakout(Frame):
                     if brick.visible == False:
                         bricks.pop(bricks.index(brick))
 
-
                 if len(balls) == 0:
                     ball = Ball(sw/2 - 10, sh - 300, 20, 20, (MAGENTA))
                     balls.append(ball)
@@ -234,3 +238,5 @@ class Breakout(Frame):
             redrawGameWindow()
 
         pygame.quit()
+
+      
