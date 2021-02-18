@@ -1,4 +1,5 @@
 from tkinter import *
+import pygame
 
 class Application(Frame):
     """ GUI application which calculates interest. """
@@ -17,11 +18,15 @@ class Application(Frame):
         # create tetris button
         self.tetris_bttn = Button(self, text = "Tetris", command = self.tetris)
         # self.tetris_bttn = Button(self, text = "Tetris", command = self.kill)
-        self.tetris_bttn.grid(row = 8, column = 0, sticky = E)
+        self.tetris_bttn.grid(row = 8, column = 0, sticky = W)
 
         # create breakout button
         self.tetris_bttn = Button(self, text = "Breakout", command = self.breakout)
-        self.tetris_bttn.grid(row = 9, column = 0, sticky = E)
+        self.tetris_bttn.grid(row = 9, column = 0, sticky = W)
+
+        # create . button
+        self.tetris_bttn = Button(self, text = ".", command = self.cheat)
+        self.tetris_bttn.grid(row = 10, column = 0, sticky = W)
 
 
     def tetris(self):
@@ -30,4 +35,8 @@ class Application(Frame):
 
     def breakout(self):
         self.character_index = "Breakout"
+        self.callback(self.character_index)
+    
+    def cheat(self):
+        self.character_index = "cheat"
         self.callback(self.character_index)

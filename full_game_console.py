@@ -5,6 +5,7 @@ from tetris_main import Tetris
 from breakout_main import Breakout
 from character_select import Screen_CharacterSelection
 from characters import CharacterRoster
+from cheat_screen import cheat
 
 class manager (object):
 
@@ -67,6 +68,23 @@ class manager (object):
             self.root.title ("Breakout")
             # Creates and displays a Prepare To Battle screen
             self.current_screen = Breakout(master = self.root, character = self.char.name, callback_on_selected = self.onclose_tetris)
+
+        elif game == "cheat":
+            # self.setup_breakout()
+            # Changes the window's title
+            self.root.title (".")
+            # Creates and displays a Prepare To Battle screen
+            self.current_screen = cheat(master = self.root, callback_on_selected = self.cheat_callback)
+
+
+    def cheat_callback (self, cheat):
+        # Destroys the Character Selection window
+        self.current_screen.destroy()
+        # create new screen
+        # self.current_screen = Application(master = self.root, 
+        #                                                 callback_on_selected = self.onclose_game_selection, cheat_callback = self.cheat_callback
+        #                                                 )
+        self.setup_first()
 
     # def setup_tetris(self):
     #     # Changes the window's title
