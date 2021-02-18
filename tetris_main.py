@@ -8,10 +8,14 @@ from tkinter import *
 
 class Tetris(Frame):
    """ I'm trying ;-; """
-   def __init__(self, master, character, callback_on_selected):
+   def __init__(self, master, character, limit, x, y, x2, callback_on_selected):
         super().__init__(master)
         self.callback = callback_on_selected
         self.character = character
+        self.limit = limit
+        self.x = x
+        self.y = y
+        self.x2 = x2
         self.grid()
         self.play_tetris()
 
@@ -272,9 +276,6 @@ class Tetris(Frame):
             sx = top_left_x
             sy = top_left_y
 
-            # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
-            # surface.blit(spr, (265,400))
-
             for i in range (len(grid)):
                 # color of grid lines (I can't think of any nicer color guys pls help me ;-;)
                 pygame.draw.line(surface, (128, 128, 128), (sx, sy+i*block_size), (sx+play_width, sy+i*block_size))
@@ -350,12 +351,7 @@ class Tetris(Frame):
         self.idk = 188
         self.load = 2
         def draw_window(surface, grid, score=0, high_score=0):
-            # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
             surface.fill((0, 0, 0))
-            # place sprite
-            # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
-            # surface.blit(spr, (265,400))
-
             pygame.font.init()
             # font = os.path.abspath("C:/Users/mikus/Downloads/goodbyeDespair.ttf")
             # font = pygame.font.Font('C:/Users/mikus/Downloads/goodbyeDespair.ttf', 60)
@@ -390,7 +386,7 @@ class Tetris(Frame):
                 # changes sprite with the beat
                 if self.counter == self.idk:
                     # make it so sprites won't repeat, breaking the beat
-                    self.load = random.choice([i for i in range(1,20) if i not in [self.load]])
+                    self.load = random.choice([i for i in range(1,self.limit) if i not in [self.load]])
                     self.counter = 0
                 spr = pygame.image.load('sprites/'+self.character+'/happy'+str(self.load)+'.png')
                 spr.set_alpha(100)
@@ -402,7 +398,7 @@ class Tetris(Frame):
                 # if self.s < 5000:
                 #     self.s += 1
 
-                surface.blit(spr, (265,400))
+                surface.blit(spr, (self.x,self.y))
                 self.counter += 1
 
 
@@ -417,7 +413,7 @@ class Tetris(Frame):
                 # if self.s < 5000:
                 #     self.s += 1
 
-                surface.blit(spr, (265,400))
+                surface.blit(spr, (self.x, self.y))
                 
 
             # if check_losing2(self.locked_positions):
@@ -434,7 +430,7 @@ class Tetris(Frame):
             if check_losing2(self.locked_positions):
                 spr = pygame.image.load('sprites/'+self.character+'/scary.png')
                 spr.set_alpha(100)
-                surface.blit(spr, (265,400))
+                surface.blit(spr, (self.x, self.y))
 
             # if check_losing3(self.locked_positions):
             #     spr = pygame.image.load('sprites/mikan/mikan_sad.png')
@@ -510,9 +506,6 @@ class Tetris(Frame):
                 # w.photo = spr # saving the image as a property is required for "saving" the image. It's odd.
                 # # grid the image
                 # w.grid(row = 5, column = 1)
-
-                # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
-                # surface.blit(spr, (265,400))
 
                 if level_time/1000 > 5:
                     level_time = 0
@@ -604,7 +597,7 @@ class Tetris(Frame):
                     spr = pygame.image.load('sprites/'+self.character+'/scary.png')
                     spr_big = pygame.transform.rotozoom(spr, 0, 3.5)
                     # surface.blit(spr_big, (80,240))
-                    win.blit(spr_big, (-90,120))
+                    win.blit(spr_big, (self.x2,170))
                 pygame.display.update()
 
                 if check_lost(self.locked_positions):

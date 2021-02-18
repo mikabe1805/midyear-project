@@ -43,7 +43,7 @@ class Breakout(Frame):
             hiscore = f.read()
             
         # background
-        bg = pygame.image.load('hopespeak.png')
+        bg = pygame.image.load('sprites/hopespeak.png')
 
         # clock for fps
         clock = pygame.time.Clock()
