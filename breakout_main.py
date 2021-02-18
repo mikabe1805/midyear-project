@@ -229,7 +229,6 @@ class Breakout(Frame):
                             bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
             if len(bricks) == 0:
                 if keys[pygame.K_SPACE]:
-                    lives += 1
                     ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
                     balls.clear()
                     balls.append(ball)
