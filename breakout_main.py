@@ -20,6 +20,14 @@ class Breakout(Frame):
         win = pygame.display.set_mode((sw, sh))
         pygame.display.set_caption("Breakout")
 
+        # sound effects
+        brickHitSound = pygame.mixer.Sound("bullet.wav")
+        bounceSound = pygame.mixer.Sound("hitGameSound.wav")
+        loseSound = pygame.mixer.Sound("punishmentTime.wav")
+        bounceSound.set_volume(.2)
+        loseSound.set_volume(.4)
+        brickHitSound.set_volume(.2)
+
         # define colors
         WHITE = (255, 255, 255)
         BLACK = (0, 0, 0)
@@ -135,7 +143,7 @@ class Breakout(Frame):
         ball = Ball(sw/2 - 10, sh - 50, 20, 20, (MAGENTA))
         balls = [ball]
         init()
-
+        
         run = True
         while run:
             clock.tick(100)
@@ -155,12 +163,15 @@ class Breakout(Frame):
                         if ball.y + ball.h >= player.y and ball.y + ball.h <= player.y + player.h:
                             ball.yv *= -1
                             ball.y = player.y -ball.h -1
-
+                            bounceSound.play()
                     if ball.x + ball.w >= sw:
+                        bounceSound.play()
                         ball.xv *= -1
                     if ball.x < 0:
+                        bounceSound.play()
                         ball.xv *= -1
                     if ball.y <= 0:
+                        bounceSound.play()
                         ball.yv *= -1
                     
                     if ball.y > sh:
@@ -175,6 +186,7 @@ class Breakout(Frame):
                                     balls.append(Ball(brick.x, brick.y, 20, 20, (MAGENTA)))
                                 ball.yv *= -1
                                 score += 1
+                                brickHitSound.play()
                                 break
 
                 for brick in bricks:
@@ -186,10 +198,14 @@ class Breakout(Frame):
                     ball = Ball(sw/2 - 10, sh - 300, 20, 20, (MAGENTA))
                     balls.append(ball)
                     lives -= 1
+                
+                if lives == 0:
+                    loseSound.play()
 
             keys = pygame.key.get_pressed()
             if lives == 0 or len(bricks) == 0:
                 if keys[pygame.K_SPACE]:
+                    loseSound.stop()
                     lives = 3
                     score = 0
                     ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
