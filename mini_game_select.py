@@ -8,15 +8,27 @@ class Application(Frame):
         self.callback = callback_on_selected
         self.grid()
         self.create_widgets()
+        self.g = 0
 
     def create_widgets(self):
         """ Create button, text, and entry widgets. """
+        self.character_index = StringVar()
+        self.character_index.set(None)
 
-        # create tetris interest button
-        # self.tetris_bttn = Button(self, text = "Tetris", command = self.kill("Tetris"))
-        self.tetris_bttn = Button(self, text = "Tetris", command = self.kill)
+        # create tetris button
+        self.tetris_bttn = Button(self, text = "Tetris", command = self.tetris)
+        # self.tetris_bttn = Button(self, text = "Tetris", command = self.kill)
         self.tetris_bttn.grid(row = 8, column = 0, sticky = E)
 
+        # create breakout button
+        self.tetris_bttn = Button(self, text = "Breakout", command = self.breakout)
+        self.tetris_bttn.grid(row = 9, column = 0, sticky = E)
 
-    def kill(self):
-        self.callback()
+
+    def tetris(self):
+        self.character_index = "Tetris"
+        self.callback(self.character_index)
+
+    def breakout(self):
+        self.character_index = "Breakout"
+        self.callback(self.character_index)
