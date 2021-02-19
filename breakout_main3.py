@@ -17,7 +17,8 @@ class Breakout(Frame):
         # game window
         sw = 800
         sh = 800
-
+        top_left_x = sw // 2
+        top_left_y = sh
         win = pygame.display.set_mode((sw, sh))
         pygame.display.set_caption("Breakout")
 
@@ -33,13 +34,13 @@ class Breakout(Frame):
         trashieSound.set_volume(.2)
         
         # lives and score
-        self.lives = 3
-        self.score = 0
-        self.level = 1
+        lives = 3
+        score = 0
+        level = 1
         hss = False 
 
         with open("hiscore.txt", "r") as f:
-            self.hiscore = f.read()
+            hiscore = f.read()
             
         # background
         bg = pygame.image.load('sprites/'+self.character+'.png').convert_alpha()
@@ -152,8 +153,8 @@ class Breakout(Frame):
         # main loop
         def redrawGameWindow():
             win.blit(bg, (0,0))
-            self.player.draw(win)
-            for ball in self.balls:
+            player.draw(win)
+            for ball in balls:
                 ball.draw(win)
             for b in bricks:
                 b.draw(win)
@@ -161,17 +162,17 @@ class Breakout(Frame):
             font = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 30)
             font2 = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 25)
 
-            tLives = font2.render("Lives: " + str(self.lives), 1, (BLACK))
+            tLives = font2.render("Lives: " + str(lives), 1, (BLACK))
             win.blit(tLives, (12,500))
-            tscore = font2.render("Score: " + str(self.score), 1, (BLACK))
+            tscore = font2.render("Score: " + str(score), 1, (BLACK))
             win.blit(tscore, (12,460))
-            tHS = font2.render("HS: " + str(self.hiscore), 1, (RED))
+            tHS = font2.render("HS: " + str(hiscore), 1, (RED))
             win.blit(tHS, (12,400))
-            tLevel = font2.render("Level: " + str(self.level), 1, (BLUE))
+            tLevel = font2.render("Level: " + str(level), 1, (BLUE))
             win.blit(tLevel, (12,250))
 
         # win
-            if len(bricks) == 0 and self.score > 0:
+            if len(bricks) == 0 and score > 0:
                 winText = font.render("Level Complete", 1, (BLUE))
                 win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - winText.get_height()//2))
                 playAgainText = font2.render("Press space to continue to the next level", 1, (178, 109, 71))
@@ -179,7 +180,7 @@ class Breakout(Frame):
 
 
         # game over
-            if self.lives == 0:
+            if lives == 0:
                 if hss == True:
                     hssText = font.render("NEW HIGH SCORE", 1, (RED))
                     win.blit(hssText, ((sw//2 - hssText.get_width()//2), sh//2 - hssText.get_height()//2))
@@ -195,32 +196,37 @@ class Breakout(Frame):
     
             pygame.display.update()
 
+        def draw_text_middle(text, size, color, surface):
+            font = pygame.font.Font('goodbyeDespair.ttf', size, bold=True)
+            label = font.render(text, 1, color)
+            surface.blit(label, (top_left_x + sw/2 - (label.get_width()/2), top_left_y + (sh/16)*7 - label.get_height()/2))
+
 
         def main(win):
-            self.player = Paddle(sw/2 - 50, sh - 100, 125, 20, (bbColor))
+            player = Paddle(sw/2 - 50, sh - 100, 125, 20, (bbColor))
             ball = Ball(sw/2 - 10, sh - 50, 20, 20, (bbColor))
-            self.balls = [ball]
+            balls = [ball]
             init()
-            
+
             run = True
             while run:
                 clock.tick(100)
-                if self.lives > 0 and len(bricks) != 0:
-                    for ball in self.balls:
+                if lives > 0 and len(bricks) != 0:
+                    for ball in balls:
                         ball.move()
-                    if pygame.mouse.get_pos()[0] - self.player.w//2 < 0:
-                        self.player.x = 0
-                    elif pygame.mouse.get_pos()[0] + self.player.w//2 > sw:
-                        self.player.x = sw - self.player.w
+                    if pygame.mouse.get_pos()[0] - player.w//2 < 0:
+                        player.x = 0
+                    elif pygame.mouse.get_pos()[0] + player.w//2 > sw:
+                        player.x = sw - player.w
                     else:
-                        self.player.x = pygame.mouse.get_pos()[0] - self.player.w //2
+                        player.x = pygame.mouse.get_pos()[0] - player.w //2
 
                     
-                    for ball in self.balls:
-                        if (ball.x >= self.player.x and ball.x <= self.player.x + self.player.w) or (ball.x + ball.w >= self.player.x and ball.x + ball.w <= self.player.x + self.player.w):
-                            if ball.y + ball.h >= self.player.y and ball.y + ball.h <= self.player.y + self.player.h:
+                    for ball in balls:
+                        if (ball.x >= player.x and ball.x <= player.x + player.w) or (ball.x + ball.w >= player.x and ball.x + ball.w <= player.x + player.w):
+                            if ball.y + ball.h >= player.y and ball.y + ball.h <= player.y + player.h:
                                 ball.yv *= -1
-                                ball.y = self.player.y -ball.h -1
+                                ball.y = player.y -ball.h -1
                                 bounceSound.play()
                         if ball.x + ball.w >= sw:
                             bounceSound.play()
@@ -233,17 +239,17 @@ class Breakout(Frame):
                             ball.yv *= -1
                         
                         if ball.y > sh:
-                            self.balls.pop(self.balls.index(ball))
+                            balls.pop(balls.index(ball))
                 
                     for brick in bricks:
-                        for ball in self.balls:
+                        for ball in balls:
                             if (ball.x >= brick.x and ball.x <= brick.x + brick.w) or ball.x + ball.w >= brick.x and ball.x + ball.w <= brick.x + brick.w:
                                 if (ball.y >= brick.y and ball.y <= brick.y + brick.h) or ball.y + ball.h >= brick.y and ball.y + ball.h <= brick.y + brick.h:
                                     brick.visible = False
                                     if brick.pregnant:
-                                        self.balls.append(Ball(brick.x, brick.y, 20, 20, (bbColor)))
+                                        balls.append(Ball(brick.x, brick.y, 20, 20, (bbColor)))
                                     ball.yv *= -1
-                                    self.score += 1
+                                    score += 1
                                     brickHitSound.play()
                                     break
 
@@ -251,71 +257,77 @@ class Breakout(Frame):
                         if brick.visible == False:
                             bricks.pop(bricks.index(brick))
 
-                    if len(self.balls) == 0:
+                    if len(balls) == 0:
                         ball = Ball(sw/2 - 10, sh - 300, 20, 20, (bbColor))
-                        self.balls.append(ball)
-                        self.lives -= 1
+                        balls.append(ball)
+                        lives -= 1
 
-                    if self.lives == 0:
+                    if lives == 0:
                         trashieSound.play()
 
-                    if self.level == 3 and self.lives == 1:
-                        self.lives += 1
+                    if level == 3 and lives == 1:
+                        lives += 1
 
                 keys = pygame.key.get_pressed()
-                if self.lives == 0:
-                    if self.score > int(self.hiscore):
-                        self.hiscore = self.score
-                        hss = True
+                if lives == 0:
+                    if score > int(hiscore):
+                        hiscore = score
                     with open("hiscore.txt", "w") as f:
-                        f. write(str(self.hiscore))
-                    
+                        f. write(str(hiscore))
                     if keys[pygame.K_SPACE]:
                         trashieSound.stop()
-                        self.lives = 3
-                        self.score = 0
-                        self.level = 1
+                        lives = 3
+                        score = 0
+                        level = 1
                         ball = Ball(sw/2 - 10, sh - 200, 20, 20, (bbColor))
-                        if len(self.balls) == 0:
-                            self.balls.append(ball)
+                        if len(balls) == 0:
+                            balls.append(ball)
                         bricks.clear()
                         for i in range(5):
                             for j in range(10):
-                                bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
+                                bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (bbColor)))
                 if len(bricks) == 0:
                     if keys[pygame.K_SPACE]:
                         ball = Ball(sw/2 - 10, sh - 200, 20, 20, (bbColor))
-                        self.balls.clear()
-                        self.balls.append(ball)
-                        if self.score > 1:
-                            self.level += 1
-                        if self.level > 2:
+                        balls.clear()
+                        balls.append(ball)
+                        if score > 1:
+                            level += 1
+                        if level > 2:
                             ball.xv = 7
                             ball.yv = 7
                             for i in range(6):
                                 for j in range(10):
-                                    bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
+                                    bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (bbColor)))
                         else:
                             for i in range(5):
                                 for j in range(10):
-                                    bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
+                                    bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (bbColor)))
 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         run = False
-                    
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_w:
+                            bricks.clear()
                 redrawGameWindow()
+
+            self.callback()
 
         def main_menu(win):
             run = True
             while run:
                 win.fill((0, 0, 0))
-                font = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 30)
-                textt = font.render("Click any key to begin", 1, (RED))
-                win.blit(textt, ((sw//2 - textt.get_width()//2), sh//2 - textt.get_height()//2))
+                draw_text_middle('Press Any Key To Play', 60, (255, 255, 255), win)
                 pygame.display.update()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
+                        if self.play != 0:
+                            self.play_obj.stop()
+                            self.play = 0
+                        if self.play2 != 0:
+                            self.play_obj2.stop()
+                            self.play2 = 0
                         run = False
                         self.callback()
                         # maybe bring it back to game select over here
@@ -326,7 +338,3 @@ class Breakout(Frame):
             pygame.display.quit()
     
         main_menu(win)  # start game
-
-        self.callback()
-
-      
