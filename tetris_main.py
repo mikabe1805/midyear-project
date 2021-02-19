@@ -458,7 +458,7 @@ class Tetris(Frame):
         def PTA():
             if self.play == 0:
                 # change to self.character later
-                filename = 'voice_lines/mikan/angry.wav'
+                filename = 'voice_lines/'+self.character+'/angry.wav'
                 wave_obj = sa.WaveObject.from_wave_file(filename)
                 self.play_obj = wave_obj.play()
             if self.play_obj.is_playing():
