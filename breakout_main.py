@@ -24,9 +24,16 @@ class Breakout(Frame):
         brickHitSound = pygame.mixer.Sound("bullet.wav")
         bounceSound = pygame.mixer.Sound("hitGameSound.wav")
         loseSound = pygame.mixer.Sound("punishmentTime.wav")
+        ghettoSound = pygame.mixer.Sound("ghetto.wav")
+        trashieSound = pygame.mixer.Sound("trashie.wav")
+        liberalSound = pygame.mixer.Sound("liberal.wav")
         bounceSound.set_volume(.2)
-        loseSound.set_volume(.4)
+        loseSound.set_volume(.3)
         brickHitSound.set_volume(.2)
+        brickHitSound.set_volume(.2)
+        ghettoSound.set_volume(.2)
+        trashieSound.set_volume(.2)
+        liberalSound.set_volume(.2)
         
         # define colors
         BLACK = (0, 0, 0)
@@ -140,6 +147,7 @@ class Breakout(Frame):
                 playAgainText = font2.render("Press space to continue to the next level", 1, (DARKPURPLE))
                 win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
 
+
         # game over
             if lives == 0:
                 resText = font.render("You flopped asl...", 1, (DARKPURPLE))
@@ -207,11 +215,11 @@ class Breakout(Frame):
                     ball = Ball(sw/2 - 10, sh - 300, 20, 20, (MAGENTA))
                     balls.append(ball)
                     lives -= 1
-                
-                if lives == 0:
-                    loseSound.play()
 
-                if score == 50 and lives == 1:
+                if lives == 0:
+                    trashieSound.play()
+
+                if level == 3 and lives == 1:
                     lives += 1
 
             keys = pygame.key.get_pressed()
@@ -221,7 +229,7 @@ class Breakout(Frame):
                 with open("hiscore.txt", "w") as f:
                     f. write(str(hiscore))
                 if keys[pygame.K_SPACE]:
-                    loseSound.stop()
+                    trashieSound.stop()
                     lives = 3
                     score = 0
                     level = 1
