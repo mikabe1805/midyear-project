@@ -24,16 +24,12 @@ class Breakout(Frame):
         brickHitSound = pygame.mixer.Sound("bullet.wav")
         bounceSound = pygame.mixer.Sound("hitGameSound.wav")
         loseSound = pygame.mixer.Sound("punishmentTime.wav")
-        ghettoSound = pygame.mixer.Sound("ghetto.wav")
         trashieSound = pygame.mixer.Sound("trashie.wav")
-        liberalSound = pygame.mixer.Sound("liberal.wav")
         bounceSound.set_volume(.2)
         loseSound.set_volume(.3)
         brickHitSound.set_volume(.2)
         brickHitSound.set_volume(.2)
-        ghettoSound.set_volume(.2)
         trashieSound.set_volume(.2)
-        liberalSound.set_volume(.2)
         
         # define colors
         BLACK = (0, 0, 0)
