@@ -38,6 +38,7 @@ class Breakout(Frame):
         # lives and score
         lives = 3
         score = 0
+        level = 1
 
         with open("hiscore.txt", "r") as f:
             hiscore = f.read()
@@ -124,16 +125,16 @@ class Breakout(Frame):
             font2 = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 25)
 
             tLives = font.render("Lives: " + str(lives), 1, BLACK)
-            win.blit(tLives, (20,500))
+            win.blit(tLives, (12,500))
             tscore = font.render("Score: " + str(score), 1, BLACK)
-            win.blit(tscore, (20,450))
+            win.blit(tscore, (12,450))
             tHS = font.render("HS: " + str(hiscore), 1, RED)
-            win.blit(tHS, (20,400))
-            tLevel = font.render("Level: " + str(score // 50 + 1), 1, BLUE)
-            win.blit(tLevel, (20,250))
-            
+            win.blit(tHS, (12,400))
+            tLevel = font.render("Level: " + str(level), 1, BLUE)
+            win.blit(tLevel, (12,250))
+
         # win
-            if len(bricks) == 0:
+            if len(bricks) == 0 and score > 0:
                 winText = font.render("Level Complete", 1, (DARKPURPLE))
                 win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - winText.get_height()//2))
                 playAgainText = font2.render("Press space to continue to the next level", 1, (DARKPURPLE))
@@ -145,7 +146,7 @@ class Breakout(Frame):
                 win.blit(resText, ((sw//2 - resText.get_width()//2), sh//2 - resText.get_height()//2))
                 playAgainText = font.render("Press Space to Play Again", 1, (DARKPURPLE))
                 win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
-
+                
             pygame.display.update()
 
         player = Paddle(sw/2 - 50, sh - 100, 125, 20, (MAGENTA))
@@ -185,7 +186,7 @@ class Breakout(Frame):
                     
                     if ball.y > sh:
                         balls.pop(balls.index(ball))
-
+            
                 for brick in bricks:
                     for ball in balls:
                         if (ball.x >= brick.x and ball.x <= brick.x + brick.w) or ball.x + ball.w >= brick.x and ball.x + ball.w <= brick.x + brick.w:
@@ -223,6 +224,7 @@ class Breakout(Frame):
                     loseSound.stop()
                     lives = 3
                     score = 0
+                    level = 1
                     ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
                     if len(balls) == 0:
                         balls.append(ball)
@@ -235,9 +237,18 @@ class Breakout(Frame):
                     ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
                     balls.clear()
                     balls.append(ball)
-                    for i in range(5):
-                        for j in range(10):
-                            bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
+                    if score > 1:
+                        level += 1
+                    if level > 2:
+                        ball.xv = 7
+                        ball.yv = 7
+                        for i in range(6):
+                            for j in range(10):
+                                bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
+                    else:
+                        for i in range(5):
+                            for j in range(10):
+                                bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -247,6 +258,6 @@ class Breakout(Frame):
                         bricks.clear()
             redrawGameWindow()
 
-        pygame.quit()
+        self.callback()
 
       
