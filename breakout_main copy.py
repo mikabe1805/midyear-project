@@ -26,38 +26,67 @@ class Breakout(Frame):
         brickHitSound = pygame.mixer.Sound("bullet.wav")
         bounceSound = pygame.mixer.Sound("hitGameSound.wav")
         loseSound = pygame.mixer.Sound("punishmentTime.wav")
-        ghettoSound = pygame.mixer.Sound("ghetto.wav")
         trashieSound = pygame.mixer.Sound("trashie.wav")
-        liberalSound = pygame.mixer.Sound("liberal.wav")
         bounceSound.set_volume(.2)
         loseSound.set_volume(.3)
         brickHitSound.set_volume(.2)
         brickHitSound.set_volume(.2)
-        ghettoSound.set_volume(.2)
         trashieSound.set_volume(.2)
-        liberalSound.set_volume(.2)
         
-        # define colors
-        BLACK = (0, 0, 0)
-        DARKPURPLE = (84, 22, 180)
-        MAGENTA = (228, 0, 224)
-        RED = (255, 0, 0)
-        BLUE = (0, 181, 236)
-
         # lives and score
         lives = 3
         score = 0
         level = 1
+        hss = False 
 
         with open("hiscore.txt", "r") as f:
             hiscore = f.read()
             
         # background
-        bg = pygame.image.load('sprites/hopespeak.png')
+        bg = pygame.image.load('sprites/'+self.character+'.png').convert_alpha()
 
         # clock for fps
         clock = pygame.time.Clock()
         
+        # define colors
+        bbColor = (228, 0, 224)
+        brickColor = (84, 22, 180)
+        BLACK = (0, 0, 0)
+        RED = (255, 0, 0)
+        BLUE = (0, 181, 236)
+        if self.character == 'celestia':
+            bbColor = (110, 18, 9)
+            brickColor = (58, 52, 60)
+        if self.character == 'chiaki':
+            bbColor = (216, 165, 168)
+            brickColor = (24, 43, 50) 
+        if self.character == 'chihiro':
+            bbColor = (73, 57, 43)
+            brickColor = (68, 68, 37)
+        if self.character == 'junko':
+            bbColor = (161, 51, 60)
+            brickColor = (226, 196, 193)
+        if self.character == 'kazuichi':
+            bbColor = (173, 73, 115)
+            brickColor = (165, 153, 31)
+        if self.character == 'nagito':
+            bbColor = (91, 101, 92)
+            brickColor = (127, 11, 8)
+        if self.character == 'sakura':
+            bbColor = (129, 16, 16)
+            brickColor = (150, 82, 27)
+        if self.character == 'taka':
+            bbColor = (70, 55, 71)
+            brickColor = (134, 18, 32)
+        """ celestia = black(58, 52, 60) red(110, 18, 9)
+        chiaki = green(24, 43, 50) light pink(216, 165, 168)
+        chihiro = green(68, 68, 37) brown(73, 57, 43)
+        junko = red(161, 51, 60) pink(226, 196, 193)
+        kazuichi = pink(173, 73, 115) green(165, 153, 31)
+        nagito = green(91, 101, 92) red(127, 11, 8)
+        sakura = red(129, 16, 16) brown(150, 82, 27)
+        taka = dark purple(70, 55, 71) red(134, 18, 32)
+ """
         # paddle
         class Paddle(object):
             def __init__(self, x, y, w, h, color):
@@ -119,7 +148,7 @@ class Breakout(Frame):
             bricks = []
             for i in range(5):
                 for j in range(10):
-                    bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
+                    bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (bbColor)))
 
         # main loop
         def redrawGameWindow():
