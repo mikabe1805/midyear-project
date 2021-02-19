@@ -38,13 +38,16 @@ class Application(Frame):
     def tetris(self):
         self.character_index = "Tetris"
         self.callback(self.character_index)
+        pygame.quit()
         # self.base.destroy()
 
 
     def breakout(self):
         self.character_index = "Breakout"
         self.callback(self.character_index)
+        pygame.quit()
     
     def cheat(self):
         self.character_index = "cheat"
         self.callback(self.character_index)
+        pygame.quit()

@@ -17,7 +17,7 @@ class Tetris(Frame):
         self.y = y
         self.x2 = x2
         self.grid()
-        self.play_tetris()
+        # self.play_tetris()
 
    def play_tetris(self):
  

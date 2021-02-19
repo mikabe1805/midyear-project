@@ -54,27 +54,36 @@ class manager (object):
     def onclose_game_selection (self, game):
         # Destroys the Character Selection window
         self.current_screen.destroy()
+        self.root.update()
 
+        self.game = game
 
-        if game == "Tetris":
+        # self.play_game()
+        # def play_game(self):
+
+        if self.game == "Tetris":
             # Continue on - set up the Prepare To Battle screen!
             # self.setup_tetris()
             # Changes the window's title
-            self.root.title ("Tetris")
+            # self.root.title ("Tetris")
             # Creates and displays a Prepare To Battle screen
-            self.currentt_screen = Tetris(master = self.root, character = self.char.name, limit = self.char.sprite_num, x = self.char.x, y = self.char.y, x2 = self.char.x2, callback_on_selected = self.onclose_tetris)
+            self.current_screen = Tetris(master = self.root, character = self.char.name, limit = self.char.sprite_num, x = self.char.x, y = self.char.y, x2 = self.char.x2, callback_on_selected = self.onclose_tetris)
+            self.root.update()
+            self.current_screen.play_tetris()
 
-        elif game == "Breakout":
+        elif self.game == "Breakout":
             # self.setup_breakout()
             # Changes the window's title
-            self.root.title ("Breakout")
+            # self.root.title ("Breakout")
             # Creates and displays a Prepare To Battle screen
-            self.currentt_screen = Breakout(master = self.root, character = self.char.name, callback_on_selected = self.onclose_tetris)
+            self.current_screen = Breakout(master = self.root, character = self.char.name, callback_on_selected = self.onclose_tetris)
+            self.root.update()
+            self.current_screen.play_breakout()
 
-        elif game == "cheat":
+        elif self.game == "cheat":
             # self.setup_breakout()
             # Changes the window's title
-            self.root.title (".")
+            # self.root.title (".")
             # Creates and displays a Prepare To Battle screen
             self.cheat = cheat(master = self.root, callback_on_selected = self.cheat_callback)
 
@@ -102,7 +111,7 @@ class manager (object):
     #     self.root.title ("Tetris")
 
     #     # Creates and displays a Prepare To Battle screen
-    #     self.current_screen = Tetris(master = self.root, character = 'nagito', callback_on_selected = self.onclose_tetris)
+    #     self.current_screen = Tetris(master = self.root, character = self.char.name, limit = self.char.sprite_num, x = self.char.x, y = self.char.y, x2 = self.char.x2, callback_on_selected = self.onclose_tetris)
 
     # def setup_breakout(self):
     #     # Changes the window's title

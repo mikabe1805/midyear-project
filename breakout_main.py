@@ -10,13 +10,15 @@ class Breakout(Frame):
         self.callback = callback_on_selected
         self.character = character
         self.grid()
-        self.play_breakout()
+        # self.play_breakout()
 
    def play_breakout(self):
         pygame.init()
         # game window
         sw = 800
         sh = 800
+        top_left_x = sw // 2
+        top_left_y = sh
         win = pygame.display.set_mode((sw, sh))
         pygame.display.set_caption("Breakout")
 
@@ -157,115 +159,148 @@ class Breakout(Frame):
                 
             pygame.display.update()
 
-        player = Paddle(sw/2 - 50, sh - 100, 125, 20, (MAGENTA))
-        ball = Ball(sw/2 - 10, sh - 50, 20, 20, (MAGENTA))
-        balls = [ball]
-        init()
+        def draw_text_middle(text, size, color, surface):
+            font = pygame.font.Font('goodbyeDespair.ttf', size, bold=True)
+            label = font.render(text, 1, color)
+            surface.blit(label, (top_left_x + sw/2 - (label.get_width()/2), top_left_y + (sh/16)*7 - label.get_height()/2))
 
-        run = True
-        while run:
-            clock.tick(100)
-            if lives > 0 and len(bricks) != 0:
-                for ball in balls:
-                    ball.move()
-                if pygame.mouse.get_pos()[0] - player.w//2 < 0:
-                    player.x = 0
-                elif pygame.mouse.get_pos()[0] + player.w//2 > sw:
-                    player.x = sw - player.w
-                else:
-                    player.x = pygame.mouse.get_pos()[0] - player.w //2
 
-                
-                for ball in balls:
-                    if (ball.x >= player.x and ball.x <= player.x + player.w) or (ball.x + ball.w >= player.x and ball.x + ball.w <= player.x + player.w):
-                        if ball.y + ball.h >= player.y and ball.y + ball.h <= player.y + player.h:
-                            ball.yv *= -1
-                            ball.y = player.y -ball.h -1
-                            bounceSound.play()
-                    if ball.x + ball.w >= sw:
-                        bounceSound.play()
-                        ball.xv *= -1
-                    if ball.x < 0:
-                        bounceSound.play()
-                        ball.xv *= -1
-                    if ball.y <= 0:
-                        bounceSound.play()
-                        ball.yv *= -1
-                    
-                    if ball.y > sh:
-                        balls.pop(balls.index(ball))
-            
-                for brick in bricks:
+        def main(win):
+            player = Paddle(sw/2 - 50, sh - 100, 125, 20, (MAGENTA))
+            ball = Ball(sw/2 - 10, sh - 50, 20, 20, (MAGENTA))
+            balls = [ball]
+            init()
+
+            run = True
+            while run:
+                clock.tick(100)
+                if lives > 0 and len(bricks) != 0:
                     for ball in balls:
-                        if (ball.x >= brick.x and ball.x <= brick.x + brick.w) or ball.x + ball.w >= brick.x and ball.x + ball.w <= brick.x + brick.w:
-                            if (ball.y >= brick.y and ball.y <= brick.y + brick.h) or ball.y + ball.h >= brick.y and ball.y + ball.h <= brick.y + brick.h:
-                                brick.visible = False
-                                if brick.pregnant:
-                                    balls.append(Ball(brick.x, brick.y, 20, 20, (MAGENTA)))
-                                ball.yv *= -1
-                                score += 1
-                                brickHitSound.play()
-                                break
-
-                for brick in bricks:
-                    if brick.visible == False:
-                        bricks.pop(bricks.index(brick))
-
-                if len(balls) == 0:
-                    ball = Ball(sw/2 - 10, sh - 300, 20, 20, (MAGENTA))
-                    balls.append(ball)
-                    lives -= 1
-
-                if lives == 0:
-                    trashieSound.play()
-
-                if level == 3 and lives == 1:
-                    lives += 1
-
-            keys = pygame.key.get_pressed()
-            if lives == 0:
-                if score > int(hiscore):
-                    hiscore = score
-                with open("hiscore.txt", "w") as f:
-                    f. write(str(hiscore))
-                if keys[pygame.K_SPACE]:
-                    trashieSound.stop()
-                    lives = 3
-                    score = 0
-                    level = 1
-                    ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
-                    if len(balls) == 0:
-                        balls.append(ball)
-                    bricks.clear()
-                    for i in range(5):
-                        for j in range(10):
-                            bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
-            if len(bricks) == 0:
-                if keys[pygame.K_SPACE]:
-                    ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
-                    balls.clear()
-                    balls.append(ball)
-                    if score > 1:
-                        level += 1
-                    if level > 2:
-                        ball.xv = 7
-                        ball.yv = 7
-                        for i in range(6):
-                            for j in range(10):
-                                bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
+                        ball.move()
+                    if pygame.mouse.get_pos()[0] - player.w//2 < 0:
+                        player.x = 0
+                    elif pygame.mouse.get_pos()[0] + player.w//2 > sw:
+                        player.x = sw - player.w
                     else:
+                        player.x = pygame.mouse.get_pos()[0] - player.w //2
+
+                    
+                    for ball in balls:
+                        if (ball.x >= player.x and ball.x <= player.x + player.w) or (ball.x + ball.w >= player.x and ball.x + ball.w <= player.x + player.w):
+                            if ball.y + ball.h >= player.y and ball.y + ball.h <= player.y + player.h:
+                                ball.yv *= -1
+                                ball.y = player.y -ball.h -1
+                                bounceSound.play()
+                        if ball.x + ball.w >= sw:
+                            bounceSound.play()
+                            ball.xv *= -1
+                        if ball.x < 0:
+                            bounceSound.play()
+                            ball.xv *= -1
+                        if ball.y <= 0:
+                            bounceSound.play()
+                            ball.yv *= -1
+                        
+                        if ball.y > sh:
+                            balls.pop(balls.index(ball))
+                
+                    for brick in bricks:
+                        for ball in balls:
+                            if (ball.x >= brick.x and ball.x <= brick.x + brick.w) or ball.x + ball.w >= brick.x and ball.x + ball.w <= brick.x + brick.w:
+                                if (ball.y >= brick.y and ball.y <= brick.y + brick.h) or ball.y + ball.h >= brick.y and ball.y + ball.h <= brick.y + brick.h:
+                                    brick.visible = False
+                                    if brick.pregnant:
+                                        balls.append(Ball(brick.x, brick.y, 20, 20, (MAGENTA)))
+                                    ball.yv *= -1
+                                    score += 1
+                                    brickHitSound.play()
+                                    break
+
+                    for brick in bricks:
+                        if brick.visible == False:
+                            bricks.pop(bricks.index(brick))
+
+                    if len(balls) == 0:
+                        ball = Ball(sw/2 - 10, sh - 300, 20, 20, (MAGENTA))
+                        balls.append(ball)
+                        lives -= 1
+
+                    if lives == 0:
+                        trashieSound.play()
+
+                    if level == 3 and lives == 1:
+                        lives += 1
+
+                keys = pygame.key.get_pressed()
+                if lives == 0:
+                    if score > int(hiscore):
+                        hiscore = score
+                    with open("hiscore.txt", "w") as f:
+                        f. write(str(hiscore))
+                    if keys[pygame.K_SPACE]:
+                        trashieSound.stop()
+                        lives = 3
+                        score = 0
+                        level = 1
+                        ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
+                        if len(balls) == 0:
+                            balls.append(ball)
+                        bricks.clear()
                         for i in range(5):
                             for j in range(10):
                                 bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
+                if len(bricks) == 0:
+                    if keys[pygame.K_SPACE]:
+                        ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
+                        balls.clear()
+                        balls.append(ball)
+                        if score > 1:
+                            level += 1
+                        if level > 2:
+                            ball.xv = 7
+                            ball.yv = 7
+                            for i in range(6):
+                                for j in range(10):
+                                    bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
+                        else:
+                            for i in range(5):
+                                for j in range(10):
+                                    bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_w:
-                        bricks.clear()
-            redrawGameWindow()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        run = False
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_w:
+                            bricks.clear()
+                redrawGameWindow()
 
-        self.callback()
+            self.callback()
+
+        def main_menu(win):
+            run = True
+            while run:
+                win.fill((0, 0, 0))
+                draw_text_middle('Press Any Key To Play', 60, (255, 255, 255), win)
+                self.counter = self.idk
+                pygame.display.update()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        if self.play != 0:
+                            self.play_obj.stop()
+                            self.play = 0
+                        if self.play2 != 0:
+                            self.play_obj2.stop()
+                            self.play2 = 0
+                        run = False
+                        self.callback()
+                        # maybe bring it back to game select over here
+                        # pygame.display.quit()
+                    if event.type == pygame.KEYDOWN:
+                        main(win)
+
+            pygame.display.quit()
+    
+        main_menu(win)  # start game
 
       
