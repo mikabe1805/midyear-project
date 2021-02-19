@@ -42,6 +42,7 @@ class Breakout(Frame):
         lives = 3
         score = 0
         level = 1
+        hss = False 
 
         with open("hiscore.txt", "r") as f:
             hiscore = f.read()
@@ -127,13 +128,13 @@ class Breakout(Frame):
             font = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 30)
             font2 = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 25)
 
-            tLives = font.render("Lives: " + str(lives), 1, BLACK)
+            tLives = font2.render("Lives: " + str(lives), 1, BLACK)
             win.blit(tLives, (12,500))
-            tscore = font.render("Score: " + str(score), 1, BLACK)
+            tscore = font2.render("Score: " + str(score), 1, BLACK)
             win.blit(tscore, (12,450))
-            tHS = font.render("HS: " + str(hiscore), 1, RED)
+            tHS = font2.render("HS: " + str(hiscore), 1, RED)
             win.blit(tHS, (12,400))
-            tLevel = font.render("Level: " + str(level), 1, BLUE)
+            tLevel = font2.render("Level: " + str(level), 1, BLUE)
             win.blit(tLevel, (12,250))
 
         # win
@@ -146,18 +147,26 @@ class Breakout(Frame):
 
         # game over
             if lives == 0:
-                resText = font.render("You flopped asl...", 1, (DARKPURPLE))
-                win.blit(resText, ((sw//2 - resText.get_width()//2), sh//2 - resText.get_height()//2))
-                playAgainText = font.render("Press Space to Play Again", 1, (DARKPURPLE))
-                win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
-                
+                if hss == True:
+                    hssText = font.render("NEW HIGH SCORE", 1, (RED))
+                    win.blit(hssText, ((sw//2 - hssText.get_width()//2), sh//2 - hssText.get_height()//2))
+                    slayText = font2.render("Why did you slay...", 1, (BLUE))
+                    win.blit(slayText, ((sw//2 - slayText.get_width()//2), sh//2 + 30 ))
+                    playAgainText = font2.render("Press space to play again", 1, (DARKPURPLE))
+                    win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 80 ))
+                else: 
+                    resText = font.render("You flopped asl...", 1, (DARKPURPLE))
+                    win.blit(resText, ((sw//2 - resText.get_width()//2), sh//2 - resText.get_height()//2))
+                    playAgainText = font2.render("Press space to play again", 1, (DARKPURPLE))
+                    win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
+    
             pygame.display.update()
 
         player = Paddle(sw/2 - 50, sh - 100, 125, 20, (MAGENTA))
         ball = Ball(sw/2 - 10, sh - 50, 20, 20, (MAGENTA))
         balls = [ball]
         init()
-
+    
         run = True
         while run:
             clock.tick(100)
@@ -222,8 +231,10 @@ class Breakout(Frame):
             if lives == 0:
                 if score > int(hiscore):
                     hiscore = score
+                    hss = True
                 with open("hiscore.txt", "w") as f:
                     f. write(str(hiscore))
+                
                 if keys[pygame.K_SPACE]:
                     trashieSound.stop()
                     lives = 3
