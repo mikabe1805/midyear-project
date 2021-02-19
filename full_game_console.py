@@ -12,12 +12,13 @@ class manager (object):
     def __init__ (self):
         self.root = tkinter.Tk()
         self.current_screen = None
+        self.file = "character_stuff.txt"
     
     def setup_first (self):
         # Changes the window's title
         self.root.title ("Select your character :)")
         # Reads battle_characters.txt to create a CharacterRoster.
-        self.character_roster = CharacterRoster ("character_stuff.txt")
+        self.character_roster = CharacterRoster (self.file)
         # Creates and displays a Character Selection screen
         self.current_screen = Screen_CharacterSelection(master = self.root, 
                                                         roster = self.character_roster, 
@@ -84,6 +85,8 @@ class manager (object):
         # self.current_screen = Application(master = self.root, 
         #                                                 callback_on_selected = self.onclose_game_selection, cheat_callback = self.cheat_callback
         #                                                 )
+        if cheat == "mikan":
+            self.file = "character_stuff copy.txt"
         self.setup_first()
 
     # def setup_tetris(self):
