@@ -19,3 +19,7 @@ class cheat(Frame):
         showTextBox(cheatBox)
         entry = textBoxInput(cheatBox)
         self.callback(entry)
+        pg.quit()
+        # for event in pg.event.get():
+        #             if event.type == pg.QUIT:
+        #                 pg.quit()

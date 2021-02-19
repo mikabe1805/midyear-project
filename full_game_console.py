@@ -12,6 +12,7 @@ class manager (object):
     def __init__ (self):
         self.root = tkinter.Tk()
         self.current_screen = None
+        self.cheat = None
         self.file = "character_stuff.txt"
     
     def setup_first (self):
@@ -61,32 +62,39 @@ class manager (object):
             # Changes the window's title
             self.root.title ("Tetris")
             # Creates and displays a Prepare To Battle screen
-            self.current_screen = Tetris(master = self.root, character = self.char.name, limit = self.char.sprite_num, x = self.char.x, y = self.char.y, x2 = self.char.x2, callback_on_selected = self.onclose_tetris)
+            self.currentt_screen = Tetris(master = self.root, character = self.char.name, limit = self.char.sprite_num, x = self.char.x, y = self.char.y, x2 = self.char.x2, callback_on_selected = self.onclose_tetris)
 
         elif game == "Breakout":
             # self.setup_breakout()
             # Changes the window's title
             self.root.title ("Breakout")
             # Creates and displays a Prepare To Battle screen
-            self.current_screen = Breakout(master = self.root, character = self.char.name, callback_on_selected = self.onclose_tetris)
+            self.currentt_screen = Breakout(master = self.root, character = self.char.name, callback_on_selected = self.onclose_tetris)
 
         elif game == "cheat":
             # self.setup_breakout()
             # Changes the window's title
             self.root.title (".")
             # Creates and displays a Prepare To Battle screen
-            self.current_screen = cheat(master = self.root, callback_on_selected = self.cheat_callback)
+            self.cheat = cheat(master = self.root, callback_on_selected = self.cheat_callback)
 
 
     def cheat_callback (self, cheat):
         # Destroys the Character Selection window
-        self.current_screen.destroy()
+        # self.cheat.destroy()
+        self.cheat = cheat
         # create new screen
         # self.current_screen = Application(master = self.root, 
         #                                                 callback_on_selected = self.onclose_game_selection, cheat_callback = self.cheat_callback
         #                                                 )
-        if cheat == "mikan":
+        self.cheat_idk()
+
+    def cheat_idk(self):
+        
+        if self.cheat == "mikan":
             self.file = "character_stuff copy.txt"
+        if self.cheat == "I know":
+            self.file = "character_stuff copy 2.txt"
         self.setup_first()
 
     # def setup_tetris(self):
