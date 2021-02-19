@@ -31,13 +31,6 @@ class Breakout(Frame):
         brickHitSound.set_volume(.2)
         trashieSound.set_volume(.2)
         
-        # define colors
-        BLACK = (0, 0, 0)
-        DARKPURPLE = (84, 22, 180)
-        MAGENTA = (228, 0, 224)
-        RED = (255, 0, 0)
-        BLUE = (0, 181, 236)
-
         # lives and score
         lives = 3
         score = 0
@@ -53,6 +46,45 @@ class Breakout(Frame):
         # clock for fps
         clock = pygame.time.Clock()
         
+        # define colors
+        bbColor = (228, 0, 224)
+        brickColor = (84, 22, 180)
+        BLACK = (0, 0, 0)
+        RED = (255, 0, 0)
+        BLUE = (0, 181, 236)
+        if self.character == 'celestia':
+            bbColor = (110, 18, 9)
+            brickColor = (58, 52, 60)
+        if self.character == 'chiaki':
+            bbColor = (216, 165, 168)
+            brickColor = (24, 43, 50) 
+        if self.character == 'chihiro':
+            bbColor = (73, 57, 43)
+            brickColor = (68, 68, 37)
+        if self.character == 'junko':
+            bbColor = (161, 51, 60)
+            brickColor = (226, 196, 193)
+        if self.character == 'kazuichi':
+            bbColor = (173, 73, 115)
+            brickColor = (165, 153, 31)
+        if self.character == 'nagito':
+            bbColor = (91, 101, 92)
+            brickColor = (127, 11, 8)
+        if self.character == 'sakura':
+            bbColor = (129, 16, 16)
+            brickColor = (150, 82, 27)
+        if self.character == 'taka':
+            bbColor = (70, 55, 71)
+            brickColor = (134, 18, 32)
+        """ celestia = black(58, 52, 60) red(110, 18, 9)
+        chiaki = green(24, 43, 50) light pink(216, 165, 168)
+        chihiro = green(68, 68, 37) brown(73, 57, 43)
+        junko = red(161, 51, 60) pink(226, 196, 193)
+        kazuichi = pink(173, 73, 115) green(165, 153, 31)
+        nagito = green(91, 101, 92) red(127, 11, 8)
+        sakura = red(129, 16, 16) brown(150, 82, 27)
+        taka = dark purple(70, 55, 71) red(134, 18, 32)
+ """
         # paddle
         class Paddle(object):
             def __init__(self, x, y, w, h, color):
@@ -114,7 +146,7 @@ class Breakout(Frame):
             bricks = []
             for i in range(5):
                 for j in range(10):
-                    bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
+                    bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
 
         # main loop
         def redrawGameWindow():
@@ -128,20 +160,20 @@ class Breakout(Frame):
             font = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 30)
             font2 = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 25)
 
-            tLives = font2.render("Lives: " + str(lives), 1, BLACK)
+            tLives = font2.render("Lives: " + str(lives), 1, (BLACK))
             win.blit(tLives, (12,500))
-            tscore = font2.render("Score: " + str(score), 1, BLACK)
+            tscore = font2.render("Score: " + str(score), 1, (BLACK))
             win.blit(tscore, (12,450))
-            tHS = font2.render("HS: " + str(hiscore), 1, RED)
+            tHS = font2.render("HS: " + str(hiscore), 1, (RED))
             win.blit(tHS, (12,400))
-            tLevel = font2.render("Level: " + str(level), 1, BLUE)
+            tLevel = font2.render("Level: " + str(level), 1, (BLUE))
             win.blit(tLevel, (12,250))
 
         # win
             if len(bricks) == 0 and score > 0:
-                winText = font.render("Level Complete", 1, (DARKPURPLE))
+                winText = font.render("Level Complete", 1, (178, 109, 71))
                 win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - winText.get_height()//2))
-                playAgainText = font2.render("Press space to continue to the next level", 1, (DARKPURPLE))
+                playAgainText = font2.render("Press space to continue to the next level", 1, (178, 109, 71))
                 win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
 
 
@@ -152,18 +184,18 @@ class Breakout(Frame):
                     win.blit(hssText, ((sw//2 - hssText.get_width()//2), sh//2 - hssText.get_height()//2))
                     slayText = font2.render("Why did you slay...", 1, (BLUE))
                     win.blit(slayText, ((sw//2 - slayText.get_width()//2), sh//2 + 30 ))
-                    playAgainText = font2.render("Press space to play again", 1, (DARKPURPLE))
+                    playAgainText = font2.render("Press space to play again", 1, (178, 109, 71))
                     win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 80 ))
                 else: 
-                    resText = font.render("You flopped asl...", 1, (DARKPURPLE))
+                    resText = font.render("You flopped asl...", 1, (BLUE))
                     win.blit(resText, ((sw//2 - resText.get_width()//2), sh//2 - resText.get_height()//2))
-                    playAgainText = font2.render("Press space to play again", 1, (DARKPURPLE))
+                    playAgainText = font2.render("Press space to play again", 1, (178, 109, 71))
                     win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
     
             pygame.display.update()
 
-        player = Paddle(sw/2 - 50, sh - 100, 125, 20, (MAGENTA))
-        ball = Ball(sw/2 - 10, sh - 50, 20, 20, (MAGENTA))
+        player = Paddle(sw/2 - 50, sh - 100, 125, 20, (bbColor))
+        ball = Ball(sw/2 - 10, sh - 50, 20, 20, (bbColor))
         balls = [ball]
         init()
     
@@ -206,7 +238,7 @@ class Breakout(Frame):
                             if (ball.y >= brick.y and ball.y <= brick.y + brick.h) or ball.y + ball.h >= brick.y and ball.y + ball.h <= brick.y + brick.h:
                                 brick.visible = False
                                 if brick.pregnant:
-                                    balls.append(Ball(brick.x, brick.y, 20, 20, (MAGENTA)))
+                                    balls.append(Ball(brick.x, brick.y, 20, 20, (bbColor)))
                                 ball.yv *= -1
                                 score += 1
                                 brickHitSound.play()
@@ -217,7 +249,7 @@ class Breakout(Frame):
                         bricks.pop(bricks.index(brick))
 
                 if len(balls) == 0:
-                    ball = Ball(sw/2 - 10, sh - 300, 20, 20, (MAGENTA))
+                    ball = Ball(sw/2 - 10, sh - 300, 20, 20, (bbColor))
                     balls.append(ball)
                     lives -= 1
 
@@ -240,16 +272,16 @@ class Breakout(Frame):
                     lives = 3
                     score = 0
                     level = 1
-                    ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
+                    ball = Ball(sw/2 - 10, sh - 200, 20, 20, (bbColor))
                     if len(balls) == 0:
                         balls.append(ball)
                     bricks.clear()
                     for i in range(5):
                         for j in range(10):
-                            bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
+                            bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
             if len(bricks) == 0:
                 if keys[pygame.K_SPACE]:
-                    ball = Ball(sw/2 - 10, sh - 200, 20, 20, (MAGENTA))
+                    ball = Ball(sw/2 - 10, sh - 200, 20, 20, (bbColor))
                     balls.clear()
                     balls.append(ball)
                     if score > 1:
@@ -259,18 +291,16 @@ class Breakout(Frame):
                         ball.yv = 7
                         for i in range(6):
                             for j in range(10):
-                                bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
+                                bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
                     else:
                         for i in range(5):
                             for j in range(10):
-                                bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (DARKPURPLE)))
+                                bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_w:
-                        bricks.clear()
+                
             redrawGameWindow()
 
         self.callback()
