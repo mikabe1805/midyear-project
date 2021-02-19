@@ -147,7 +147,7 @@ class Breakout(Frame):
             for i in range(5):
                 for j in range(10):
                     bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
-
+       
         # main loop
         def redrawGameWindow():
             win.blit(bg, (0,0))
@@ -163,7 +163,7 @@ class Breakout(Frame):
             tLives = font2.render("Lives: " + str(lives), 1, (BLACK))
             win.blit(tLives, (12,500))
             tscore = font2.render("Score: " + str(score), 1, (BLACK))
-            win.blit(tscore, (12,450))
+            win.blit(tscore, (12,460))
             tHS = font2.render("HS: " + str(hiscore), 1, (RED))
             win.blit(tHS, (12,400))
             tLevel = font2.render("Level: " + str(level), 1, (BLUE))
@@ -171,7 +171,7 @@ class Breakout(Frame):
 
         # win
             if len(bricks) == 0 and score > 0:
-                winText = font.render("Level Complete", 1, (178, 109, 71))
+                winText = font.render("Level Complete", 1, (BLUE))
                 win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - winText.get_height()//2))
                 playAgainText = font2.render("Press space to continue to the next level", 1, (178, 109, 71))
                 win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
@@ -198,7 +198,7 @@ class Breakout(Frame):
         ball = Ball(sw/2 - 10, sh - 50, 20, 20, (bbColor))
         balls = [ball]
         init()
-    
+        
         run = True
         while run:
             clock.tick(100)
