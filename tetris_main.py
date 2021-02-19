@@ -427,6 +427,7 @@ class Tetris(Frame):
             draw_grid(surface, grid)
             # pygame.display.update()
 
+
             if check_losing2(self.locked_positions):
                 spr = pygame.image.load('sprites/'+self.character+'/scary.png')
                 spr.set_alpha(100)
