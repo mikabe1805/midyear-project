@@ -12,7 +12,7 @@ from ffpyplayer.player import MediaPlayer
 
 class Tetris(Frame):
    """ I'm trying ;-; """
-   def __init__(self, master, character, limit, x, y, x2, callback_on_selected):
+   def __init__(self, master, character, limit, x, y, x2, access, callback_on_selected):
         super().__init__(master)
         self.callback = callback_on_selected
         self.character = character
@@ -20,6 +20,7 @@ class Tetris(Frame):
         self.x = x
         self.y = y
         self.x2 = x2
+        self.access = access
         self.grid()
         # self.play_tetris()
 
@@ -570,31 +571,30 @@ class Tetris(Frame):
                                 current_piece.y += 1
                             if not(valid_space(current_piece, grid)):
                                 current_piece.y -= 1
-                            # while valid_space(current_piece, grid):
-                            #     current_piece.y += 1
-                            # # if not(valid_space(current_piece, grid)):
-                            # #     current_piece.y -= 1
+
                         # for bug fixing
                         if event.key == pygame.K_r:
-                            score += 10
+                            if self.access == 1:
+                                score += 10
                         
                         # deletes all blocks placed
                         if event.key == pygame.K_g:
-                            inc = 0
-                            for i in range(len(grid)-1, -1, -1):
-                                row = grid[i]
-                                inc += 1
-                                ind = i
-                                for j in range(len(row)):
-                                    try:
-                                        del self.locked_positions[(j, i)]
-                                    except:
-                                        continue
-                            for key in sorted(list(self.locked_positions), key = lambda x: x[1])[::-1]:
-                                x,y = key
-                                if y < ind:
-                                    newkey = (x,y + inc)
-                                    self.locked_positions[newkey] = self.locked_positions.pop(key)
+                            if self.access == 1:
+                                inc = 0
+                                for i in range(len(grid)-1, -1, -1):
+                                    row = grid[i]
+                                    inc += 1
+                                    ind = i
+                                    for j in range(len(row)):
+                                        try:
+                                            del self.locked_positions[(j, i)]
+                                        except:
+                                            continue
+                                for key in sorted(list(self.locked_positions), key = lambda x: x[1])[::-1]:
+                                    x,y = key
+                                    if y < ind:
+                                        newkey = (x,y + inc)
+                                        self.locked_positions[newkey] = self.locked_positions.pop(key)
 
                 shape_pos = convert_shape_format(current_piece)
 
@@ -624,20 +624,38 @@ class Tetris(Frame):
                 pygame.display.update()
 
                 if check_lost(self.locked_positions):
-                    draw_text_middle2("YOU LOST", "TIME FOR PUNISHMENT", 65, (180, 0, 0), win)
-                    pygame.display.update()
-                    pygame.time.delay(4000)
-                    if self.play2 != 0:
-                        self.play_obj2.stop()
-                        self.play2 = 0
-                    if self.play != 0:
-                        self.play_obj.stop()
-                        self.play = 0
-                    if self.character == "chiaki":
-                        if random.randint(1, 4) == 4:
-                            video_path="chaikii.mp4"
-                            PlayVideo(video_path)
-                    # draw_text_middle(win, "TIME FOR PUNISHMENT", 80, (255, 255, 255))
+                    if self.access == 2:
+                        if self.play2 != 0:
+                            self.play_obj2.stop()
+                            self.play2 = 0
+                        if self.play != 0:
+                            self.play_obj.stop()
+                            self.play = 0
+                        video_path="komahina.mp4"
+                        PlayVideo(video_path)
+                    elif self.access == 3:
+                        if self.play2 != 0:
+                            self.play_obj2.stop()
+                            self.play2 = 0
+                        if self.play != 0:
+                            self.play_obj.stop()
+                            self.play = 0
+                        video_path="rhinestoneEyes.mp4"
+                        PlayVideo(video_path)
+                    else:
+                        draw_text_middle2("YOU LOST", "TIME FOR PUNISHMENT", 65, (180, 0, 0), win)
+                        pygame.display.update()
+                        pygame.time.delay(4000)
+                        if self.play2 != 0:
+                            self.play_obj2.stop()
+                            self.play2 = 0
+                        if self.play != 0:
+                            self.play_obj.stop()
+                            self.play = 0
+                        if self.character == "chiaki":
+                            if random.randint(1, 4) == 4:
+                                video_path="chaikii.mp4"
+                                PlayVideo(video_path)
                     run = False
                     update_score(score)
 
