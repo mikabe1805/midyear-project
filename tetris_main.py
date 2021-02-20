@@ -5,6 +5,10 @@ import pygame
 import random
 import simpleaudio as sa
 from tkinter import *
+import cv2
+import numpy as np
+#ffpyplayer for playing audio
+from ffpyplayer.player import MediaPlayer
 
 class Tetris(Frame):
    """ I'm trying ;-; """
@@ -466,6 +470,24 @@ class Tetris(Frame):
             else:
                 self.play = 0
 
+        def PlayVideo(video_path):
+            video=cv2.VideoCapture(video_path)
+            player = MediaPlayer(video_path)
+            while True:
+                grabbed, frame=video.read()
+                audio_frame, val = player.get_frame()
+                if not grabbed:
+                    print("End of video")
+                    break
+                if cv2.waitKey(28) & 0xFF == ord("q"):
+                    break
+                cv2.imshow("Video", frame)
+                if val != 'eof' and audio_frame is not None:
+                    #audio
+                    img, t = audio_frame
+            video.release()
+            cv2.destroyAllWindows()
+
 
         
         def main(win):
@@ -611,6 +633,10 @@ class Tetris(Frame):
                     if self.play != 0:
                         self.play_obj.stop()
                         self.play = 0
+                    if self.character == "chiaki":
+                        if random.randint(1, 4) == 4:
+                            video_path="chaikii.mp4"
+                            PlayVideo(video_path)
                     # draw_text_middle(win, "TIME FOR PUNISHMENT", 80, (255, 255, 255))
                     run = False
                     update_score(score)
