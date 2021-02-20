@@ -13,6 +13,7 @@ class manager (object):
         self.root = tkinter.Tk()
         self.current_screen = None
         self.cheat = None
+        self.access = 0
         self.file = "character_stuff.txt"
     
     def setup_first (self):
@@ -67,7 +68,7 @@ class manager (object):
             # Changes the window's title
             # self.root.title ("Tetris")
             # Creates and displays a Prepare To Battle screen
-            self.current_screen = Tetris(master = self.root, character = self.char.name, limit = self.char.sprite_num, x = self.char.x, y = self.char.y, x2 = self.char.x2, callback_on_selected = self.onclose_tetris)
+            self.current_screen = Tetris(master = self.root, character = self.char.name, limit = self.char.sprite_num, x = self.char.x, y = self.char.y, x2 = self.char.x2, access = self.access, callback_on_selected = self.onclose_tetris)
             self.root.update()
             self.current_screen.play_tetris()
 
@@ -104,6 +105,15 @@ class manager (object):
             self.file = "character_stuff copy.txt"
         if self.cheat == "I know":
             self.file = "character_stuff copy 2.txt"
+        if self.cheat == "11037":
+            # gives access to cheats
+            self.access = 1
+        if self.cheat == "komahina":
+            self.file = "character_stuff copy 3.txt"
+            self.access = 2
+        if self.cheat == "rhinestone eyes":
+            self.file = "character_stuff copy 3.txt"
+            self.access = 3
         self.setup_first()
 
     # def setup_tetris(self):
