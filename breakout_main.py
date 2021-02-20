@@ -25,7 +25,7 @@ class Breakout(Frame):
         brickHitSound = pygame.mixer.Sound("bullet.wav")
         bounceSound = pygame.mixer.Sound("hitGameSound.wav")
         loseSound = pygame.mixer.Sound("punishmentTime.wav")
-        bgmSound = pygame.mixer.Sound("bgm.wav")
+        bgmSound = pygame.mixer.Sound('voice_lines/'+self.character+'/happy.wav')
         bounceSound.set_volume(.2)
         loseSound.set_volume(.2)
         brickHitSound.set_volume(.2)
@@ -77,6 +77,7 @@ class Breakout(Frame):
         if self.character == 'taka':
             bbColor = (70, 55, 71)
             brickColor = (134, 18, 32)
+        
         """ celestia = black(58, 52, 60) red(110, 18, 9)
         chiaki = green(24, 43, 50) light pink(216, 165, 168)
         chihiro = green(68, 68, 37) brown(73, 57, 43)
