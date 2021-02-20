@@ -25,13 +25,13 @@ class Breakout(Frame):
         brickHitSound = pygame.mixer.Sound("bullet.wav")
         bounceSound = pygame.mixer.Sound("hitGameSound.wav")
         loseSound = pygame.mixer.Sound("punishmentTime.wav")
-        trashieSound = pygame.mixer.Sound("trashie.wav")
+        bgmSound = pygame.mixer.Sound('voice_lines/'+self.character+'/happy.wav')
         bounceSound.set_volume(.2)
-        loseSound.set_volume(.3)
+        loseSound.set_volume(.2)
         brickHitSound.set_volume(.2)
         brickHitSound.set_volume(.2)
-        trashieSound.set_volume(.2)
-        
+        bgmSound.set_volume(.1)
+
         # lives and score
         self.lives = 3
         self.score = 0
@@ -77,6 +77,7 @@ class Breakout(Frame):
         if self.character == 'taka':
             bbColor = (70, 55, 71)
             brickColor = (134, 18, 32)
+        
         """ celestia = black(58, 52, 60) red(110, 18, 9)
         chiaki = green(24, 43, 50) light pink(216, 165, 168)
         chihiro = green(68, 68, 37) brown(73, 57, 43)
@@ -87,7 +88,7 @@ class Breakout(Frame):
         taka = dark purple(70, 55, 71) red(134, 18, 32)
  """
         # paddle
-        class Paddle(object):
+        class Paddle(pygame.sprite.Sprite):
             def __init__(self, x, y, w, h, color):
                 self.x = x
                 self.y = y
@@ -97,8 +98,21 @@ class Breakout(Frame):
                 self.xx = self.x + self.w
                 self.yy = self.y + self.h
             
+            
             def draw(self, win):
                 pygame.draw.rect(win, self.color, [self.x, self.y, self.w, self.h])
+
+            def moveLeft(self, pixels):
+                self.x -= pixels
+                # Check that you are not going too far (off the screen)
+                if self.x < 0:
+                    self.x = 0
+                
+            def moveRight(self, pixels):
+                self.x += pixels
+                # Check that you are not going too far (off the screen)
+                if self.x > 700:
+                    self.x = 700
 
         # ball
         class Ball(object):
@@ -206,16 +220,15 @@ class Breakout(Frame):
             while run:
                 clock.tick(100)
                 if self.lives > 0 and len(bricks) != 0:
+                    bgmSound.play()
                     for ball in self.balls:
                         ball.move()
-                    if pygame.mouse.get_pos()[0] - self.player.w//2 < 0:
-                        self.player.x = 0
-                    elif pygame.mouse.get_pos()[0] + self.player.w//2 > sw:
-                        self.player.x = sw - self.player.w
-                    else:
-                        self.player.x = pygame.mouse.get_pos()[0] - self.player.w //2
-
-                    
+                    keys = pygame.key.get_pressed()
+                    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+                        self.player.moveLeft(7)
+                    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+                        self.player.moveRight(7)  
+    
                     for ball in self.balls:
                         if (ball.x >= self.player.x and ball.x <= self.player.x + self.player.w) or (ball.x + ball.w >= self.player.x and ball.x + ball.w <= self.player.x + self.player.w):
                             if ball.y + ball.h >= self.player.y and ball.y + ball.h <= self.player.y + self.player.h:
@@ -257,7 +270,8 @@ class Breakout(Frame):
                         self.lives -= 1
 
                     if self.lives == 0:
-                        trashieSound.play()
+                        bgmSound.stop()
+                        loseSound.play()
 
                     if self.level == 3 and self.lives == 1:
                         self.lives += 1
@@ -271,7 +285,7 @@ class Breakout(Frame):
                         f. write(str(self.hiscore))
                     
                     if keys[pygame.K_SPACE]:
-                        trashieSound.stop()
+                        loseSound.stop()
                         self.lives = 3
                         self.score = 0
                         self.level = 1
@@ -289,9 +303,11 @@ class Breakout(Frame):
                         self.balls.append(ball)
                         if self.score > 1:
                             self.level += 1
-                        if self.level > 2:
-                            ball.xv = 7
-                            ball.yv = 7
+                        if self.level > 1:
+                            if self.level == 2:
+                                self.lives += 1
+                            ball.xv = 6
+                            ball.yv = 6
                             for i in range(6):
                                 for j in range(10):
                                     bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
