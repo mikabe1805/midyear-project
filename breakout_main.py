@@ -134,8 +134,26 @@ class Breakout(Frame):
                 self.x += self.xv
                 self.y += self.yv
 
+        class Bomb(object):
+            def __init__(self, x, y, w, h, color):
+                self.x = x
+                self.y = y
+                self.w = w
+                self.h = h
+                self.color = color
+                self.xv = random.choice([2, 3, 4, -2, -3, -4])
+                self.yv = 5
+                self.xx = self.x + self.w
+                self.yy = self.y + self.h
+
+            def draw(self, win):
+                pygame.draw.rect(win, self.color, [self.x, self.y, self.w, self.h])    
+
+            def move(self):
+                self.x += self.xv
+                self.y += self.yv
         # brick
-        class Brick(object):
+        class Brick(pygame.sprite.Sprite):
             def __init__(self, x, y, w, h, color):
                 self.x = x
                 self.y = y
@@ -151,6 +169,12 @@ class Breakout(Frame):
                     self.pregnant = True
                 else:
                     self.pregnant = False
+                
+                self.ranNum = random.randint(0,10)
+                if self.ranNum < 1:
+                    self.explode = True
+                else:
+                    self.explode = False
 
             def draw(self, win):
                 pygame.draw.rect(win, self.color, [self.x, self.y, self.w, self.h])
@@ -169,6 +193,8 @@ class Breakout(Frame):
             self.player.draw(win)
             for ball in self.balls:
                 ball.draw(win)
+            for bomb in self.bombs:
+                bomb.draw(win)
             for b in bricks:
                 b.draw(win)
 
@@ -213,6 +239,8 @@ class Breakout(Frame):
         def main(win):
             self.player = Paddle(sw/2 - 50, sh - 100, 125, 20, (bbColor))
             ball = Ball(sw/2 - 10, sh - 50, 20, 20, (bbColor))
+            bomb = Bomb(sw/2 - 10, sh - 50, 20, 20, (BLACK))
+            self.bombs = [bomb]
             self.balls = [ball]
             init()
             
@@ -223,6 +251,9 @@ class Breakout(Frame):
                     bgmSound.play()
                     for ball in self.balls:
                         ball.move()
+                    for bomb in self.bombs:
+                        bomb.move()
+
                     keys = pygame.key.get_pressed()
                     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
                         self.player.moveLeft(7)
@@ -247,12 +278,32 @@ class Breakout(Frame):
                         
                         if ball.y > sh:
                             self.balls.pop(self.balls.index(ball))
-                
+
+                    for bomb in self.bombs:
+                        if (bomb.x >= self.player.x and bomb.x <= self.player.x + self.player.w) or (bomb.x + bomb.w >= self.player.x and bomb.x + bomb.w <= self.player.x + self.player.w):
+                            if bomb.y + bomb.h >= self.player.y and bomb.y + bomb.h <= self.player.y + self.player.h:
+                                bomb.yv *= -1
+                                bomb.y = self.player.y -bomb.h -1
+                                self.balls.clear()
+                                self.lives -= 1
+                                self.bombs.clear()
+                                self.balls.append(ball)
+                        if bomb.x + bomb.w >= sw:
+                            bomb.xv *= -1
+                        if bomb.x < 0:
+                            bomb.xv *= -1
+                        if bomb.y <= 0:
+                            bomb.yv *= -1
+                        if bomb.y > sh:
+                            self.bombs.pop(self.bombs.index(bomb))
+
                     for brick in bricks:
                         for ball in self.balls:
                             if (ball.x >= brick.x and ball.x <= brick.x + brick.w) or ball.x + ball.w >= brick.x and ball.x + ball.w <= brick.x + brick.w:
                                 if (ball.y >= brick.y and ball.y <= brick.y + brick.h) or ball.y + ball.h >= brick.y and ball.y + ball.h <= brick.y + brick.h:
                                     brick.visible = False
+                                    if brick.explode and self.level > 1:
+                                        self.bombs.append(Bomb(brick.x, brick.y, 20, 20, (BLACK)))
                                     if brick.pregnant:
                                         self.balls.append(Ball(brick.x, brick.y, 20, 20, (bbColor)))
                                     ball.yv *= -1
