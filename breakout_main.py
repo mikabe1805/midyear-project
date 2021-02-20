@@ -87,7 +87,7 @@ class Breakout(Frame):
         taka = dark purple(70, 55, 71) red(134, 18, 32)
  """
         # paddle
-        class Paddle(object):
+        class Paddle(pygame.sprite.Sprite):
             def __init__(self, x, y, w, h, color):
                 self.x = x
                 self.y = y
@@ -97,8 +97,21 @@ class Breakout(Frame):
                 self.xx = self.x + self.w
                 self.yy = self.y + self.h
             
+            
             def draw(self, win):
                 pygame.draw.rect(win, self.color, [self.x, self.y, self.w, self.h])
+
+            def moveLeft(self, pixels):
+                self.x -= pixels
+                # Check that you are not going too far (off the screen)
+                if self.x < 0:
+                    self.x = 0
+                
+            def moveRight(self, pixels):
+                self.x += pixels
+                # Check that you are not going too far (off the screen)
+                if self.x > 700:
+                    self.x = 700
 
         # ball
         class Ball(object):
@@ -208,13 +221,16 @@ class Breakout(Frame):
                 if self.lives > 0 and len(bricks) != 0:
                     for ball in self.balls:
                         ball.move()
-                    if pygame.mouse.get_pos()[0] - self.player.w//2 < 0:
-                        self.player.x = 0
-                    elif pygame.mouse.get_pos()[0] + self.player.w//2 > sw:
-                        self.player.x = sw - self.player.w
-                    else:
-                        self.player.x = pygame.mouse.get_pos()[0] - self.player.w //2
-
+                     
+                    keys = pygame.key.get_pressed()
+                    if keys[pygame.K_LEFT]:
+                        self.player.moveLeft(5)
+                    if keys[pygame.K_RIGHT]:
+                        self.player.moveRight(5)  
+                    if keys[pygame.K_a]:
+                        self.player.moveLeft(5)
+                    if keys[pygame.K_d]:
+                        self.player.moveRight(5) 
                     
                     for ball in self.balls:
                         if (ball.x >= self.player.x and ball.x <= self.player.x + self.player.w) or (ball.x + ball.w >= self.player.x and ball.x + ball.w <= self.player.x + self.player.w):
