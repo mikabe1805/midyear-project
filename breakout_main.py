@@ -25,13 +25,13 @@ class Breakout(Frame):
         brickHitSound = pygame.mixer.Sound("bullet.wav")
         bounceSound = pygame.mixer.Sound("hitGameSound.wav")
         loseSound = pygame.mixer.Sound("punishmentTime.wav")
-        trashieSound = pygame.mixer.Sound("trashie.wav")
+        bgmSound = pygame.mixer.Sound("bgm.wav")
         bounceSound.set_volume(.2)
-        loseSound.set_volume(.3)
+        loseSound.set_volume(.2)
         brickHitSound.set_volume(.2)
         brickHitSound.set_volume(.2)
-        trashieSound.set_volume(.2)
-        
+        bgmSound.set_volume(.1)
+
         # lives and score
         self.lives = 3
         self.score = 0
@@ -219,19 +219,15 @@ class Breakout(Frame):
             while run:
                 clock.tick(100)
                 if self.lives > 0 and len(bricks) != 0:
+                    bgmSound.play()
                     for ball in self.balls:
                         ball.move()
-                     
                     keys = pygame.key.get_pressed()
-                    if keys[pygame.K_LEFT]:
-                        self.player.moveLeft(5)
-                    if keys[pygame.K_RIGHT]:
-                        self.player.moveRight(5)  
-                    if keys[pygame.K_a]:
-                        self.player.moveLeft(5)
-                    if keys[pygame.K_d]:
-                        self.player.moveRight(5) 
-                    
+                    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+                        self.player.moveLeft(7)
+                    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+                        self.player.moveRight(7)  
+    
                     for ball in self.balls:
                         if (ball.x >= self.player.x and ball.x <= self.player.x + self.player.w) or (ball.x + ball.w >= self.player.x and ball.x + ball.w <= self.player.x + self.player.w):
                             if ball.y + ball.h >= self.player.y and ball.y + ball.h <= self.player.y + self.player.h:
@@ -273,7 +269,8 @@ class Breakout(Frame):
                         self.lives -= 1
 
                     if self.lives == 0:
-                        trashieSound.play()
+                        bgmSound.stop()
+                        loseSound.play()
 
                     if self.level == 3 and self.lives == 1:
                         self.lives += 1
@@ -287,7 +284,7 @@ class Breakout(Frame):
                         f. write(str(self.hiscore))
                     
                     if keys[pygame.K_SPACE]:
-                        trashieSound.stop()
+                        loseSound.stop()
                         self.lives = 3
                         self.score = 0
                         self.level = 1
@@ -305,9 +302,11 @@ class Breakout(Frame):
                         self.balls.append(ball)
                         if self.score > 1:
                             self.level += 1
-                        if self.level > 2:
-                            ball.xv = 7
-                            ball.yv = 7
+                        if self.level > 1:
+                            if self.level == 2:
+                                self.lives += 1
+                            ball.xv = 6
+                            ball.yv = 6
                             for i in range(6):
                                 for j in range(10):
                                     bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
