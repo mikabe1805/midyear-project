@@ -249,9 +249,9 @@ class Breakout(Frame):
                 playAgainText = font2.render("Press space to continue to the next level", 1, (178, 109, 71))
                 win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
                 if self.level == 1:
-                    bombText = font2.render("Introducing Bombs and Powerups!", 1, (BLUE))
+                    bombText = font2.render("Introducing Bombs and Powerups!", 1, (brickColor))
                     win.blit(bombText, ((sw//2 - bombText.get_width()//2), sh//2 - 60 ))
-                    bomb2Text = font2.render("Avoid the black balls and collect the green!", 1, (bbColor))
+                    bomb2Text = font2.render("Avoid the black balls and collect the green!", 1, (BLUE))
                     win.blit(bomb2Text, ((sw//2 - bomb2Text.get_width()//2), sh//2 - 30))
 
 
@@ -394,6 +394,7 @@ class Breakout(Frame):
 
                     if len(self.balls) == 0:
                         ball = Ball(sw/2 - 10, sh - 300, 20, 20, (bbColor))
+                        self.lives -= 1
                         self.balls.append(ball)
                         if self.level > 1:
                             ball.xv = 5
@@ -401,14 +402,10 @@ class Breakout(Frame):
                         if self.level > 2:
                             ball.xv = 6
                             ball.yv = 6
-                        self.lives -= 1
 
                     if self.lives == 0:
                         bgmSound.stop()
                         loseSound.play()
-
-                    if self.level == 3 and self.lives == 1:
-                        self.lives += 1
 
                 keys = pygame.key.get_pressed()
                 if self.lives == 0:
