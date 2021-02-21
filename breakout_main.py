@@ -153,6 +153,26 @@ class Breakout(Frame):
             def move(self):
                 self.x += self.xv
                 self.y += self.yv
+
+        # power up
+        class Power(object):
+            def __init__(self, x, y, w, h, color):
+                self.x = x
+                self.y = y
+                self.w = w
+                self.h = h
+                self.color = color
+                self.xv = random.choice([2, 3, 4, -2, -3, -4])
+                self.yv = 5
+                self.xx = self.x + self.w
+                self.yy = self.y + self.h
+
+            def draw(self, win):
+                pygame.draw.rect(win, self.color, [self.x, self.y, self.w, self.h])    
+
+            def move(self):
+                self.x += self.xv
+                self.y += self.yv
         # brick
         class Brick(pygame.sprite.Sprite):
             def __init__(self, x, y, w, h, color):
@@ -176,6 +196,12 @@ class Breakout(Frame):
                     self.explode = True
                 else:
                     self.explode = False
+                
+                self.ranNum = random.randint(0,10)
+                if self.ranNum < 1:
+                    self.powerUp = True
+                else:
+                    self.powerUp = False
 
             def draw(self, win):
                 pygame.draw.rect(win, self.color, [self.x, self.y, self.w, self.h])
@@ -196,6 +222,8 @@ class Breakout(Frame):
                 ball.draw(win)
             for bomb in self.bombs:
                 bomb.draw(win)
+            for power in self.powers:
+                power.draw(win)
             for b in bricks:
                 b.draw(win)
 
@@ -213,10 +241,18 @@ class Breakout(Frame):
 
         # win
             if len(bricks) == 0 and self.score > 0:
-                winText = font.render("Level Complete", 1, (BLUE))
-                win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - winText.get_height()//2))
+                winText = font.render('Level ' +str(self.level)+' Complete', 1, (0, 255, 0))
+                if self.level == 1:
+                    win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - 100 ))
+                else:
+                    win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - winText.get_height()//2))
                 playAgainText = font2.render("Press space to continue to the next level", 1, (178, 109, 71))
                 win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
+                if self.level == 1:
+                    bombText = font2.render("Introducing Bombs and Powerups!", 1, (BLUE))
+                    win.blit(bombText, ((sw//2 - bombText.get_width()//2), sh//2 - 60 ))
+                    bomb2Text = font2.render("Avoid the black balls and collect the green!", 1, (bbColor))
+                    win.blit(bomb2Text, ((sw//2 - bomb2Text.get_width()//2), sh//2 - 30))
 
 
         # game over
@@ -245,8 +281,10 @@ class Breakout(Frame):
             self.player = Paddle(sw/2 - 50, sh - 100, 125, 20, (bbColor))
             ball = Ball(sw/2 - 10, sh - 50, 20, 20, (bbColor))
             bomb = Bomb(sw/2 - 10, sh - 50, 20, 20, (BLACK))
+            power = Power(sw/2 - 10, sh - 50, 20, 20, (0, 255, 0))
             self.bombs = [bomb]
             self.balls = [ball]
+            self.powers = [power]
             sSpace = False
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
@@ -264,6 +302,8 @@ class Breakout(Frame):
                         ball.move()
                     for bomb in self.bombs:
                         bomb.move()
+                    for power in self.powers:
+                        power.move()
                         
                     keys = pygame.key.get_pressed()
                     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
@@ -307,6 +347,24 @@ class Breakout(Frame):
                             bomb.yv *= -1
                         if bomb.y > sh:
                             self.bombs.pop(self.bombs.index(bomb))
+                    
+                    for power in self.powers:
+                        if (power.x >= self.player.x and power.x <= self.player.x + self.player.w) or (power.x + power.w >= self.player.x and power.x + power.w <= self.player.x + self.player.w):
+                            if power.y + power.h >= self.player.y and power.y + power.h <= self.player.y + self.player.h:
+                                power.yv *= -1
+                                power.y = self.player.y -power.h -1
+                                self.balls.clear()
+                                self.lives += 1
+                                self.powers.clear()
+                                self.balls.append(ball)
+                        if power.x + power.w >= sw:
+                            power.xv *= -1
+                        if power.x < 0:
+                            power.xv *= -1
+                        if power.y <= 0:
+                            power.yv *= -1
+                        if power.y > sh:
+                            self.powers.pop(self.powers.index(power))
 
                     for brick in bricks:
                         for ball in self.balls:
@@ -317,6 +375,14 @@ class Breakout(Frame):
                                         self.bombs.append(Bomb(brick.x, brick.y, 20, 20, (BLACK)))
                                     if brick.pregnant:
                                         self.balls.append(Ball(brick.x, brick.y, 20, 20, (bbColor)))
+                                        if self.level > 1:
+                                            ball.xv = 5
+                                            ball.yv = 5
+                                        if self.level > 2:
+                                            ball.xv = 6
+                                            ball.yv = 6
+                                    if brick.powerUp and self.level > 1:
+                                        self.powers.append(Power(brick.x, brick.y, 20, 20, (0, 255, 0)))
                                     ball.yv *= -1
                                     self.score += 1
                                     brickHitSound.play()
@@ -329,6 +395,12 @@ class Breakout(Frame):
                     if len(self.balls) == 0:
                         ball = Ball(sw/2 - 10, sh - 300, 20, 20, (bbColor))
                         self.balls.append(ball)
+                        if self.level > 1:
+                            ball.xv = 5
+                            ball.yv = 5
+                        if self.level > 2:
+                            ball.xv = 6
+                            ball.yv = 6
                         self.lives -= 1
 
                     if self.lives == 0:
@@ -352,6 +424,7 @@ class Breakout(Frame):
                         self.score = 0
                         self.level = 1
                         ball = Ball(sw/2 - 10, sh - 200, 20, 20, (bbColor))
+                        self.player = Paddle(sw/2 - 50, sh - 100, 125, 20, (bbColor))
                         if len(self.balls) == 0:
                             self.balls.append(ball)
                         bricks.clear()
@@ -362,6 +435,7 @@ class Breakout(Frame):
                     sSpace = True
                     if keys[pygame.K_SPACE]:
                         ball = Ball(sw/2 - 10, sh - 200, 20, 20, (bbColor))
+                        self.player = Paddle(sw/2 - 50, sh - 100, 125, 20, (bbColor))
                         self.balls.clear()
                         self.balls.append(ball)
                         if self.score > 1:
@@ -369,6 +443,9 @@ class Breakout(Frame):
                         if self.level > 1:
                             if self.level == 2:
                                 self.lives += 1
+                            ball.xv = 5
+                            ball.yv = 5
+                        if self.level > 2:
                             ball.xv = 6
                             ball.yv = 6
                             for i in range(6):
@@ -382,10 +459,13 @@ class Breakout(Frame):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         run = False
-                    if keys[pygame.K_e]:
+                    if keys[pygame.K_w]:
                         self.lives += 1
-                    if keys[pygame.K_q]:
+                    if keys[pygame.K_s]:
                         self.lives -= 1
+                    if keys[pygame.K_q]:
+                        bricks.clear()
+                        self.score += 50
                     if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
                         if sSpace == True:
                             sSpace = False
