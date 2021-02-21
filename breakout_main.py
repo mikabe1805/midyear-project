@@ -37,6 +37,7 @@ class Breakout(Frame):
         self.score = 0
         self.level = 1
         hss = False 
+        self.pause = False
 
         with open("hiscore.txt", "r") as f:
             self.hiscore = f.read()
@@ -232,7 +233,11 @@ class Breakout(Frame):
                     win.blit(resText, ((sw//2 - resText.get_width()//2), sh//2 - resText.get_height()//2))
                     playAgainText = font2.render("Press space to play again", 1, (178, 109, 71))
                     win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
-    
+
+            if self.pause == True:
+                pauseText = font.render("GAME PAUSED", 1, (BLUE))
+                win.blit(pauseText, ((sw//2 - pauseText.get_width()//2), sh//2 - pauseText.get_height()//2))
+                    
             pygame.display.update()
 
 
@@ -242,23 +247,29 @@ class Breakout(Frame):
             bomb = Bomb(sw/2 - 10, sh - 50, 20, 20, (BLACK))
             self.bombs = [bomb]
             self.balls = [ball]
+            sSpace = False
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                sSpace = True
+
             init()
-            
+        
             run = True
             while run:
-                clock.tick(100)
-                if self.lives > 0 and len(bricks) != 0:
+                if self.lives > 0 and len(bricks) != 0 and self.pause == False:
+                    redrawGameWindow()
+                    clock.tick(100)
                     bgmSound.play()
                     for ball in self.balls:
                         ball.move()
                     for bomb in self.bombs:
                         bomb.move()
-
+                        
                     keys = pygame.key.get_pressed()
                     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
                         self.player.moveLeft(7)
                     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-                        self.player.moveRight(7)  
+                        self.player.moveRight(7)
     
                     for ball in self.balls:
                         if (ball.x >= self.player.x and ball.x <= self.player.x + self.player.w) or (ball.x + ball.w >= self.player.x and ball.x + ball.w <= self.player.x + self.player.w):
@@ -334,7 +345,7 @@ class Breakout(Frame):
                         hss = True
                     with open("hiscore.txt", "w") as f:
                         f. write(str(self.hiscore))
-                    
+                    sSpace = True
                     if keys[pygame.K_SPACE]:
                         loseSound.stop()
                         self.lives = 3
@@ -348,6 +359,7 @@ class Breakout(Frame):
                             for j in range(10):
                                 bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
                 if len(bricks) == 0:
+                    sSpace = True
                     if keys[pygame.K_SPACE]:
                         ball = Ball(sw/2 - 10, sh - 200, 20, 20, (bbColor))
                         self.balls.clear()
@@ -370,7 +382,16 @@ class Breakout(Frame):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         run = False
-                    
+                    if keys[pygame.K_e]:
+                        self.lives += 1
+                    if keys[pygame.K_q]:
+                        self.lives -= 1
+                    if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
+                        if sSpace == True:
+                            sSpace = False
+                        else:
+                            self.pause = not self.pause
+                        
                 redrawGameWindow()
 
         def main_menu(win):
