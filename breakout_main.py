@@ -454,7 +454,7 @@ class Breakout(Frame):
                                     bricks.append(Brick(10 + j * 79, 50 + i * 35, 70, 25, (brickColor)))
 
                 for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
+                    if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
                         run = False
                     if keys[pygame.K_w]:
                         self.lives += 1
@@ -480,7 +480,8 @@ class Breakout(Frame):
                 win.blit(textt, ((sw//2 - textt.get_width()//2), sh//2 - textt.get_height()//2))
                 pygame.display.update()
                 for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
+                    keys = pygame.key.get_pressed()
+                    if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
                         run = False
                         self.callback()
                         # maybe bring it back to game select over here
