@@ -242,13 +242,13 @@ class Breakout(Frame):
         # win
             if len(bricks) == 0 and self.score > 0:
                 winText = font.render('Level ' +str(self.level)+' Complete', 1, (0, 255, 0))
-                if self.level == 1:
+                if self.level == 2:
                     win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - 100 ))
                 else:
                     win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - winText.get_height()//2))
                 playAgainText = font2.render("Press space to continue to the next level", 1, (178, 109, 71))
                 win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
-                if self.level == 1:
+                if self.level == 2:
                     bombText = font2.render("Introducing Bombs and Powerups!", 1, (brickColor))
                     win.blit(bombText, ((sw//2 - bombText.get_width()//2), sh//2 - 60 ))
                     bomb2Text = font2.render("Avoid the black balls and collect the green!", 1, (BLUE))
@@ -371,7 +371,7 @@ class Breakout(Frame):
                             if (ball.x >= brick.x and ball.x <= brick.x + brick.w) or ball.x + ball.w >= brick.x and ball.x + ball.w <= brick.x + brick.w:
                                 if (ball.y >= brick.y and ball.y <= brick.y + brick.h) or ball.y + ball.h >= brick.y and ball.y + ball.h <= brick.y + brick.h:
                                     brick.visible = False
-                                    if brick.explode and self.level > 1:
+                                    if brick.explode and self.level > 2:
                                         self.bombs.append(Bomb(brick.x, brick.y, 20, 20, (BLACK)))
                                     if brick.pregnant:
                                         self.balls.append(Ball(brick.x, brick.y, 20, 20, (bbColor)))
@@ -381,7 +381,7 @@ class Breakout(Frame):
                                         if self.level > 2:
                                             ball.xv = 6
                                             ball.yv = 6
-                                    if brick.powerUp and self.level > 1:
+                                    if brick.powerUp and self.level > 2:
                                         self.powers.append(Power(brick.x, brick.y, 20, 20, (0, 255, 0)))
                                     ball.yv *= -1
                                     self.score += 1
