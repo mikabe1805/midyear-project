@@ -230,28 +230,28 @@ class Breakout(Frame):
             font = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 30)
             font2 = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 25)
 
-            tLives = font2.render("Lives: " + str(self.lives), 1, (BLACK))
+            tLives = font2.render("LIVES: " + str(self.lives), 1, (BLACK))
             win.blit(tLives, (12,500))
-            tscore = font2.render("Score: " + str(self.score), 1, (BLACK))
+            tscore = font2.render("SCORE: " + str(self.score), 1, (BLACK))
             win.blit(tscore, (12,460))
             tHS = font2.render("HS: " + str(self.hiscore), 1, (RED))
             win.blit(tHS, (12,400))
-            tLevel = font2.render("Level: " + str(self.level), 1, (BLUE))
+            tLevel = font2.render("LEVEL: " + str(self.level), 1, (BLUE))
             win.blit(tLevel, (12,250))
 
         # win
             if len(bricks) == 0 and self.score > 0:
-                winText = font.render('Level ' +str(self.level)+' Complete', 1, (0, 255, 0))
+                winText = font.render('LEVEL ' +str(self.level)+' COMPLETE', 1, (0, 255, 0))
                 if self.level == 2:
                     win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - 100 ))
                 else:
                     win.blit(winText, ((sw//2 - winText.get_width()//2), sh//2 - winText.get_height()//2))
-                playAgainText = font2.render("Press space to continue to the next level", 1, (178, 109, 71))
+                playAgainText = font2.render("PRESS SPACE TO CONTINUE", 1, (33, 19, 13))
                 win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
                 if self.level == 2:
-                    bombText = font2.render("Introducing Bombs and Powerups!", 1, (brickColor))
+                    bombText = font2.render("INTRODUCING BOMBS AND POWERUPS!", 1, (brickColor))
                     win.blit(bombText, ((sw//2 - bombText.get_width()//2), sh//2 - 60 ))
-                    bomb2Text = font2.render("Avoid the black balls and collect the green!", 1, (BLUE))
+                    bomb2Text = font2.render("COLLECT THE GREEN BALLS AND AVOID THE BLACK!", 1, (BLUE))
                     win.blit(bomb2Text, ((sw//2 - bomb2Text.get_width()//2), sh//2 - 30))
 
 
@@ -262,12 +262,12 @@ class Breakout(Frame):
                     win.blit(hssText, ((sw//2 - hssText.get_width()//2), sh//2 - hssText.get_height()//2))
                     slayText = font2.render("Why did you slay...", 1, (BLUE))
                     win.blit(slayText, ((sw//2 - slayText.get_width()//2), sh//2 + 30 ))
-                    playAgainText = font2.render("Press space to play again", 1, (178, 109, 71))
+                    playAgainText = font2.render("PRESS SPACE TO PLAY AGAIN", 1, (33, 19, 13))
                     win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 80 ))
                 else: 
                     resText = font.render("You flopped asl...", 1, (BLUE))
                     win.blit(resText, ((sw//2 - resText.get_width()//2), sh//2 - resText.get_height()//2))
-                    playAgainText = font2.render("Press space to play again", 1, (178, 109, 71))
+                    playAgainText = font2.render("PRESS SPACE TO PLAY AGAIN", 1, (33, 19, 13))
                     win.blit(playAgainText, ((sw//2 - playAgainText.get_width()//2), sh//2 + 30 ))
 
             if self.pause == True:
