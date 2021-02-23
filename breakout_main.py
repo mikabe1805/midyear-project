@@ -1,6 +1,7 @@
 import pygame
 import random
 from tkinter import *
+import simpleaudio as sa
 pygame.init()
 
 class Breakout(Frame):
@@ -17,20 +18,30 @@ class Breakout(Frame):
         # game window
         sw = 800
         sh = 800
+        self.play = 0
 
         win = pygame.display.set_mode((sw, sh))
         pygame.display.set_caption("Breakout")
+
+        def BGM():
+            if self.play == 0:
+                filename = 'voice_lines/'+self.character+'/happy.wav'
+                bgmSound = sa.WaveObject.from_wave_file(filename)
+                self.bgmSound = bgmSound.play()
+            if self.bgmSound.is_playing():
+                self.play = 1
+            else:
+                self.play = 0
+
 
         # sound effects
         brickHitSound = pygame.mixer.Sound("bullet.wav")
         bounceSound = pygame.mixer.Sound("hitGameSound.wav")
         loseSound = pygame.mixer.Sound("punishmentTime.wav")
-        bgmSound = pygame.mixer.Sound('voice_lines/'+self.character+'/happy.wav')
         bounceSound.set_volume(.2)
         loseSound.set_volume(.2)
         brickHitSound.set_volume(.2)
         brickHitSound.set_volume(.2)
-        bgmSound.set_volume(.1)
 
         # lives and score
         self.lives = 3
@@ -220,7 +231,7 @@ class Breakout(Frame):
             while run:
                 clock.tick(100)
                 if self.lives > 0 and len(bricks) != 0:
-                    bgmSound.play()
+                    BGM()
                     for ball in self.balls:
                         ball.move()
                     keys = pygame.key.get_pressed()
@@ -270,7 +281,9 @@ class Breakout(Frame):
                         self.lives -= 1
 
                     if self.lives == 0:
-                        bgmSound.stop()
+                        if self.play != 0:
+                            self.bgmSound.stop()
+                            self.play = 0
                         loseSound.play()
 
                     if self.level == 3 and self.lives == 1:
@@ -326,12 +339,18 @@ class Breakout(Frame):
             run = True
             while run:
                 win.fill((0, 0, 0))
+                if self.play != 0:
+                    self.bgmSound.stop()
+                    self.play = 0
                 font = pygame.font.Font("SuperLegendBoy-4w8y.ttf", 30)
                 textt = font.render("Click any key to begin", 1, (RED))
                 win.blit(textt, ((sw//2 - textt.get_width()//2), sh//2 - textt.get_height()//2))
                 pygame.display.update()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
+                        if self.play != 0:
+                            self.bgmSound.stop()
+                            self.play = 0
                         run = False
                         self.callback()
                         # maybe bring it back to game select over here
