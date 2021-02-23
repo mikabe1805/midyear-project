@@ -5,16 +5,24 @@ import pygame
 import random
 import simpleaudio as sa
 from tkinter import *
+import cv2
+import numpy as np
+#ffpyplayer for playing audio
+from ffpyplayer.player import MediaPlayer
 
 class Tetris(Frame):
    """ I'm trying ;-; """
-   def __init__(self, master, character, limit, callback_on_selected):
+   def __init__(self, master, character, limit, x, y, x2, access, callback_on_selected):
         super().__init__(master)
         self.callback = callback_on_selected
         self.character = character
         self.limit = limit
+        self.x = x
+        self.y = y
+        self.x2 = x2
+        self.access = access
         self.grid()
-        self.play_tetris()
+        # self.play_tetris()
 
    def play_tetris(self):
  
@@ -273,9 +281,6 @@ class Tetris(Frame):
             sx = top_left_x
             sy = top_left_y
 
-            # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
-            # surface.blit(spr, (265,400))
-
             for i in range (len(grid)):
                 # color of grid lines (I can't think of any nicer color guys pls help me ;-;)
                 pygame.draw.line(surface, (128, 128, 128), (sx, sy+i*block_size), (sx+play_width, sy+i*block_size))
@@ -351,12 +356,7 @@ class Tetris(Frame):
         self.idk = 188
         self.load = 2
         def draw_window(surface, grid, score=0, high_score=0):
-            # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
             surface.fill((0, 0, 0))
-            # place sprite
-            # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
-            # surface.blit(spr, (265,400))
-
             pygame.font.init()
             # font = os.path.abspath("C:/Users/mikus/Downloads/goodbyeDespair.ttf")
             # font = pygame.font.Font('C:/Users/mikus/Downloads/goodbyeDespair.ttf', 60)
@@ -403,7 +403,7 @@ class Tetris(Frame):
                 # if self.s < 5000:
                 #     self.s += 1
 
-                surface.blit(spr, (265,400))
+                surface.blit(spr, (self.x,self.y))
                 self.counter += 1
 
 
@@ -418,7 +418,7 @@ class Tetris(Frame):
                 # if self.s < 5000:
                 #     self.s += 1
 
-                surface.blit(spr, (265,400))
+                surface.blit(spr, (self.x, self.y))
                 
 
             # if check_losing2(self.locked_positions):
@@ -432,10 +432,11 @@ class Tetris(Frame):
             draw_grid(surface, grid)
             # pygame.display.update()
 
+
             if check_losing2(self.locked_positions):
                 spr = pygame.image.load('sprites/'+self.character+'/scary.png')
                 spr.set_alpha(100)
-                surface.blit(spr, (265,400))
+                surface.blit(spr, (self.x, self.y))
 
             # if check_losing3(self.locked_positions):
             #     spr = pygame.image.load('sprites/mikan/mikan_sad.png')
@@ -462,13 +463,31 @@ class Tetris(Frame):
         def PTA():
             if self.play == 0:
                 # change to self.character later
-                filename = 'voice_lines/mikan/angry.wav'
+                filename = 'voice_lines/'+self.character+'/angry.wav'
                 wave_obj = sa.WaveObject.from_wave_file(filename)
                 self.play_obj = wave_obj.play()
             if self.play_obj.is_playing():
                 self.play = 1
             else:
                 self.play = 0
+
+        def PlayVideo(video_path):
+            video=cv2.VideoCapture(video_path)
+            player = MediaPlayer(video_path)
+            while True:
+                grabbed, frame=video.read()
+                audio_frame, val = player.get_frame()
+                if not grabbed:
+                    print("End of video")
+                    break
+                if cv2.waitKey(28) & 0xFF == ord("q"):
+                    break
+                cv2.imshow("Video", frame)
+                if val != 'eof' and audio_frame is not None:
+                    #audio
+                    img, t = audio_frame
+            video.release()
+            cv2.destroyAllWindows()
 
 
         
@@ -512,9 +531,6 @@ class Tetris(Frame):
                 # # grid the image
                 # w.grid(row = 5, column = 1)
 
-                # spr = pygame.image.load('sprites/mikan/mikan_sad.png')
-                # surface.blit(spr, (265,400))
-
                 if level_time/1000 > 5:
                     level_time = 0
                     if self.fall_speed > 0.12:
@@ -555,31 +571,30 @@ class Tetris(Frame):
                                 current_piece.y += 1
                             if not(valid_space(current_piece, grid)):
                                 current_piece.y -= 1
-                            # while valid_space(current_piece, grid):
-                            #     current_piece.y += 1
-                            # # if not(valid_space(current_piece, grid)):
-                            # #     current_piece.y -= 1
+
                         # for bug fixing
                         if event.key == pygame.K_r:
-                            score += 10
+                            if self.access == 1:
+                                score += 10
                         
                         # deletes all blocks placed
                         if event.key == pygame.K_g:
-                            inc = 0
-                            for i in range(len(grid)-1, -1, -1):
-                                row = grid[i]
-                                inc += 1
-                                ind = i
-                                for j in range(len(row)):
-                                    try:
-                                        del self.locked_positions[(j, i)]
-                                    except:
-                                        continue
-                            for key in sorted(list(self.locked_positions), key = lambda x: x[1])[::-1]:
-                                x,y = key
-                                if y < ind:
-                                    newkey = (x,y + inc)
-                                    self.locked_positions[newkey] = self.locked_positions.pop(key)
+                            if self.access == 1:
+                                inc = 0
+                                for i in range(len(grid)-1, -1, -1):
+                                    row = grid[i]
+                                    inc += 1
+                                    ind = i
+                                    for j in range(len(row)):
+                                        try:
+                                            del self.locked_positions[(j, i)]
+                                        except:
+                                            continue
+                                for key in sorted(list(self.locked_positions), key = lambda x: x[1])[::-1]:
+                                    x,y = key
+                                    if y < ind:
+                                        newkey = (x,y + inc)
+                                        self.locked_positions[newkey] = self.locked_positions.pop(key)
 
                 shape_pos = convert_shape_format(current_piece)
 
@@ -605,20 +620,42 @@ class Tetris(Frame):
                     spr = pygame.image.load('sprites/'+self.character+'/scary.png')
                     spr_big = pygame.transform.rotozoom(spr, 0, 3.5)
                     # surface.blit(spr_big, (80,240))
-                    win.blit(spr_big, (-90,120))
+                    win.blit(spr_big, (self.x2,170))
                 pygame.display.update()
 
                 if check_lost(self.locked_positions):
-                    draw_text_middle2("YOU LOST", "TIME FOR PUNISHMENT", 65, (180, 0, 0), win)
-                    pygame.display.update()
-                    pygame.time.delay(4000)
-                    if self.play2 != 0:
-                        self.play_obj2.stop()
-                        self.play2 = 0
-                    if self.play != 0:
-                        self.play_obj.stop()
-                        self.play = 0
-                    # draw_text_middle(win, "TIME FOR PUNISHMENT", 80, (255, 255, 255))
+                    if self.access == 2:
+                        if self.play2 != 0:
+                            self.play_obj2.stop()
+                            self.play2 = 0
+                        if self.play != 0:
+                            self.play_obj.stop()
+                            self.play = 0
+                        video_path="komahina.mp4"
+                        PlayVideo(video_path)
+                    elif self.access == 3:
+                        if self.play2 != 0:
+                            self.play_obj2.stop()
+                            self.play2 = 0
+                        if self.play != 0:
+                            self.play_obj.stop()
+                            self.play = 0
+                        video_path="rhinestoneEyes.mp4"
+                        PlayVideo(video_path)
+                    else:
+                        draw_text_middle2("YOU LOST", "TIME FOR PUNISHMENT", 65, (180, 0, 0), win)
+                        pygame.display.update()
+                        pygame.time.delay(4000)
+                        if self.play2 != 0:
+                            self.play_obj2.stop()
+                            self.play2 = 0
+                        if self.play != 0:
+                            self.play_obj.stop()
+                            self.play = 0
+                        if self.character == "chiaki":
+                            if random.randint(1, 4) == 4:
+                                video_path="chaikii.mp4"
+                                PlayVideo(video_path)
                     run = False
                     update_score(score)
 

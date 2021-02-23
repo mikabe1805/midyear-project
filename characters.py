@@ -1,8 +1,11 @@
 class Character (object):
     
-    def __init__ (self, name, sprite_num):
+    def __init__ (self, name, sprite_num, x, y, x2):
         self.name = name
         self.sprite_num = sprite_num    
+        self.x = x
+        self.y = y
+        self.x2 = x2
         
 class CharacterRoster (object):
     def __init__ (self, file_name):
@@ -13,8 +16,8 @@ class CharacterRoster (object):
         
         for line in text_file:
             line = line.strip()
-            my_fields = line.split(":",2)
-            character = Character (my_fields[0], int(my_fields[1]))
+            my_fields = line.split(":",5)
+            character = Character (my_fields[0], int(my_fields[1]), int(my_fields[2]), int(my_fields[3]), int(my_fields[4]))
             self.character_list.append(character)
         
     def get_character (self, i):

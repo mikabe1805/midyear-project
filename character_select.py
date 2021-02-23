@@ -20,7 +20,10 @@ class Screen_CharacterSelection (Frame):
         row = 2
         for char in self.roster.character_list:
             # create radio button and name
-            Radiobutton(self, text = char.name, variable = self.character_index, value = row-2).grid(row = row, column = 1, sticky = W)
+            if char.name == "junko enoshima":
+                Radiobutton(self, text = "junko", variable = self.character_index, value = row-2).grid(row = row, column = 1, sticky = W)
+            else:
+                Radiobutton(self, text = char.name, variable = self.character_index, value = row-2).grid(row = row, column = 1, sticky = W)
 
             # create an image of the character
             imageSmall = PhotoImage(file="sprites/" + char.name + "/lil.png")
