@@ -1,0 +1,121 @@
+import pygame
+
+pygame.init()
+
+var = pygame.display.set_mode((750, 500))
+
+pygame.display.set_caption('Danganronpa Pong Game')
+
+
+white = (255, 255, 255)
+purple = (128,0,128)
+pink = (255,20,147)
+
+class Paddle(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([20, 80])
+        self.image.fill(pink)
+        self.rect = self.image.get_rect()
+        self.points = 0
+
+class Ball(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([10, 10])
+        self.image.fill(pink)
+        self.rect = self.image.get_rect()
+        self.speed = 15
+        self.dx = 1
+        self.dy = 1
+
+paddle1 = Paddle()
+paddle1.rect.x = 25
+paddle1.rect.y = 225
+
+paddle2 = Paddle()
+paddle2.rect.x = 715
+paddle2.rect.y = 225
+
+pong = Ball()
+pong.rect.x = 375
+pong.rect.y = 250
+
+all_sprites = pygame.sprite.Group()
+all_sprites.add(paddle1, paddle2, pong)
+
+def redraw():
+    background_image = pygame.image.load("hopespeak.png")
+    var.blit(background_image, [0,0])
+    #Font for the title 
+    font = pygame.font.SysFont("Comic Sans MS", 35)
+    text = font.render("Dangonronpa Pong ", False, purple)
+    textRect = text.get_rect()
+    textRect.center = (750//2, 25)
+    var.blit(text, textRect)
+
+    #Score visual for Player 1
+    player1_score = font.render(str(paddle1.points), False, purple)
+    player1Rect = player1_score.get_rect()
+    player1Rect.center = (50, 50)
+    var.blit(player1_score, player1Rect)
+
+    # Player 2 Score
+    player2_score = font.render(str(paddle2.points), False, purple)
+    player2Rect = player2_score.get_rect()
+    player2Rect.center = (700, 50)
+    var.blit(player2_score, player2Rect)
+
+
+    all_sprites.draw(var)
+    pygame.display.update()
+
+run = True
+
+while run:
+    pygame.time.delay(100)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+
+    key = pygame.key.get_pressed()
+    if key[pygame.K_w]:
+        paddle1.rect.y += - 15
+    if key[pygame.K_s]:
+        paddle1.rect.y += 15
+    if key[pygame.K_UP]:
+        paddle2.rect.y += -15
+    if key[pygame.K_DOWN]:
+        paddle2.rect.y += 15
+
+    pong.rect.x += pong.speed * pong.dx
+    pong.rect.y += pong.speed * pong.dy
+
+
+    if pong.rect.y > 490:
+        pong.dy = -1
+
+    if pong.rect.x > 740:
+        pong.rect.x, pong.rect.y = 375, 250
+        pong.dx = -1
+        paddle1.points += 1
+
+    if pong.rect.y < 15:
+        pong.dy = 1
+
+    if pong.rect.x < 15:
+        pong.rect.x, pong.rect.y = 375, 250
+        pong.dx = 1
+        paddle2.points += 1
+
+    if paddle1.rect.colliderect(pong.rect):
+        pong.dx = 1
+    if paddle2.rect.colliderect(pong.rect):
+        pong.dx = -1
+    
+
+    redraw()
+
+pygame.quit()
+
