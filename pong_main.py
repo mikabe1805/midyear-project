@@ -119,13 +119,13 @@ class Pong(Frame):
 
                 key = pygame.key.get_pressed()
                 if key[pygame.K_w]:
-                    paddle1.rect.y += -15
+                    paddle1.rect.y += -20
                 if key[pygame.K_s]:
-                    paddle1.rect.y += 15
+                    paddle1.rect.y += 20
                 if key[pygame.K_UP]:
-                    paddle2.rect.y += -15
+                    paddle2.rect.y += -20
                 if key[pygame.K_DOWN]:
-                    paddle2.rect.y += 15
+                    paddle2.rect.y += 20
 
                 pong.rect.x += pong.speed * pong.dx
                 pong.rect.y += pong.speed * pong.dy
