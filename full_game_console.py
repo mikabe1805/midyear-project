@@ -3,6 +3,7 @@ import tkinter
 from mini_game_select import Application
 from tetris_main import Tetris
 from breakout_main import Breakout
+from pong_main import Pong
 from character_select import Screen_CharacterSelection
 from characters import CharacterRoster
 from cheat_screen import cheat
@@ -80,6 +81,15 @@ class manager (object):
             self.current_screen = Breakout(master = self.root, character = self.char.name, callback_on_selected = self.onclose_tetris)
             self.root.update()
             self.current_screen.play_breakout()
+
+        elif self.game == "Pong":
+            # self.setup_pong()
+            # Changes the window's title
+            # self.root.title ("Pong")
+            # Creates and displays a Prepare To Battle screen
+            self.current_screen = Pong(master = self.root, character = self.char.name, callback_on_selected = self.onclose_tetris)
+            self.root.update()
+            self.current_screen.play_pong()
 
         elif self.game == "cheat":
             # self.setup_breakout()
