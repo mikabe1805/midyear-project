@@ -469,11 +469,7 @@ class Breakout(Frame):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
                         run = False
-                    if keys[pygame.K_w]:
-                        self.lives += 1
-                    if keys[pygame.K_s]:
-                        self.lives -= 1
-                    if keys[pygame.K_q]:
+                    if keys[pygame.K_TAB]:
                         bricks.clear()
                         self.score += 50
                     if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
