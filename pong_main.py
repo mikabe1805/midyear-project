@@ -18,11 +18,32 @@ class Pong(Frame):
 
         pygame.display.set_caption('Danganronpa Pong')
 
-
-        white = (255, 255, 255)
-        purple = (128,0,128)
-        pink = (255,20,147)
-
+        brickColor = (128,0,128)
+        bbColor = (255,20,147)
+        if self.character == 'celestia':
+            bbColor = (110, 18, 9)
+            brickColor = (58, 52, 60)
+        if self.character == 'chiaki':
+            bbColor = (216, 165, 168)
+            brickColor = (24, 43, 50) 
+        if self.character == 'chihiro':
+            bbColor = (73, 57, 43)
+            brickColor = (68, 68, 37)
+        if self.character == 'junko':
+            bbColor = (161, 51, 60)
+            brickColor = (226, 196, 193)
+        if self.character == 'kazuichi':
+            bbColor = (173, 73, 115)
+            brickColor = (165, 153, 31)
+        if self.character == 'nagito':
+            bbColor = (91, 101, 92)
+            brickColor = (127, 11, 8)
+        if self.character == 'sakura':
+            bbColor = (129, 16, 16)
+            brickColor = (150, 82, 27)
+        if self.character == 'taka':
+            bbColor = (70, 55, 71)
+            brickColor = (134, 18, 32)
         
         hitSound = pygame.mixer.Sound("bullet.wav")
         bounceSound = pygame.mixer.Sound("hitGameSound.wav")
@@ -32,17 +53,17 @@ class Pong(Frame):
             def __init__(self):
                 pygame.sprite.Sprite.__init__(self)
                 self.image = pygame.Surface([20, 80])
-                self.image.fill(pink)
+                self.image.fill(bbColor)
                 self.rect = self.image.get_rect()
                 self.points = 0
 
         class Ball(pygame.sprite.Sprite):
             def __init__(self):
                 pygame.sprite.Sprite.__init__(self)
-                self.image = pygame.Surface([10, 10])
-                self.image.fill(pink)
+                self.image = pygame.Surface([15, 15])
+                self.image.fill(bbColor)
                 self.rect = self.image.get_rect()
-                self.speed = 15
+                self.speed = 12
                 self.dx = 1
                 self.dy = 1
 
@@ -66,30 +87,30 @@ class Pong(Frame):
 
             var.blit(background_image, [0,0])
             #Font for the title 
-            font = pygame.font.SysFont("Comic Sans MS", 45)
-            font2 = pygame.font.SysFont("Comic Sans MS", 75)
-            text = font.render("Dangonronpa Pong ", False, purple)
+            font = pygame.font.Font("SuperLegendBoy-4w8Y.ttf", 30)
+            font2 = pygame.font.Font("SuperLegendBoy-4w8Y.ttf", 50)
+            text = font.render("Dangonronpa Pong", False, brickColor)
             textRect = text.get_rect()
             textRect.center = (750//2, 25)
             var.blit(text, textRect)
 
             #Score visual for Player 1
-            player1_score = font.render(str(paddle1.points), False, purple)
+            player1_score = font.render(str(paddle1.points), False, brickColor)
             player1Rect = player1_score.get_rect()
             player1Rect.center = (50, 50)
             var.blit(player1_score, player1Rect)
 
             # Player 2 Score
-            player2_score = font.render(str(paddle2.points), False, purple)
+            player2_score = font.render(str(paddle2.points), False, brickColor)
             player2Rect = player2_score.get_rect()
             player2Rect.center = (700, 50)
             var.blit(player2_score, player2Rect)
 
-            win1Text = font2.render("Player 1 Wins!", False, purple)
-            win2Text = font2.render("Player 2 Wins!", False, purple)
+            win1Text = font2.render("Player 1 Wins!", False, brickColor)
+            win2Text = font2.render("Player 2 Wins!", False, brickColor)
             win1Rect = win1Text.get_rect()
             win2Rect = win2Text.get_rect()
-            replayText = font.render("Press Space To Play Again", False, purple)
+            replayText = font.render("Press Space To Play Again", False, brickColor)
             replayRect = replayText.get_rect()
             win1Rect.center = (375, 250)
             win2Rect.center = (375, 250)
@@ -107,13 +128,13 @@ class Pong(Frame):
 
         while run:
             if paddle1.points < 10 and paddle2.points < 10:
-                pygame.time.delay(50)
-                if paddle1.rect.y > 400:
-                    paddle1.rect.y = 400
+                pygame.time.delay(25)
+                if paddle1.rect.y > 390:
+                    paddle1.rect.y = 390
                 if paddle1.rect.y < 10:
                     paddle1.rect.y = 10
-                if paddle2.rect.y > 400:
-                    paddle2.rect.y = 400
+                if paddle2.rect.y > 390:
+                    paddle2.rect.y = 390
                 if paddle2.rect.y < 10:
                     paddle2.rect.y = 10
 
