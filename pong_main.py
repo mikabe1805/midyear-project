@@ -23,6 +23,11 @@ class Pong(Frame):
         purple = (128,0,128)
         pink = (255,20,147)
 
+        
+        hitSound = pygame.mixer.Sound("bullet.wav")
+        bounceSound = pygame.mixer.Sound("hitGameSound.wav")
+        hitSound.set_volume(.2)
+        bounceSound.set_volume(.2)
         class Paddle(pygame.sprite.Sprite):
             def __init__(self):
                 pygame.sprite.Sprite.__init__(self)
@@ -61,8 +66,8 @@ class Pong(Frame):
 
             var.blit(background_image, [0,0])
             #Font for the title 
-            font = pygame.font.SysFont("Comic Sans MS", 35)
-            font2 = pygame.font.SysFont("Comic Sans MS", 70)
+            font = pygame.font.SysFont("Comic Sans MS", 45)
+            font2 = pygame.font.SysFont("Comic Sans MS", 75)
             text = font.render("Dangonronpa Pong ", False, purple)
             textRect = text.get_rect()
             textRect.center = (750//2, 25)
@@ -84,10 +89,14 @@ class Pong(Frame):
             win2Text = font2.render("Player 2 Wins!", False, purple)
             win1Rect = win1Text.get_rect()
             win2Rect = win2Text.get_rect()
+            replayText = font.render("Press Space To Play Again", False, purple)
+            replayRect = replayText.get_rect()
             win1Rect.center = (375, 250)
             win2Rect.center = (375, 250)
+            replayRect.center = (375, 320)
             if paddle1.points == 10:
                 var.blit(win1Text, win1Rect)
+                var.blit(replayText, replayRect)
             if paddle2.points == 10:
                 var.blit(win2Text, win2Rect)
 
@@ -140,11 +149,19 @@ class Pong(Frame):
 
                 if paddle1.rect.colliderect(pong.rect):
                     pong.dx = 1
+                    bounceSound.play()
+
                 if paddle2.rect.colliderect(pong.rect):
                     pong.dx = -1
-                
+                    bounceSound.play()
 
                 redraw()
+
+            keys = pygame.key.get_pressed()
+            if paddle1.points == 10 or paddle2.points == 10:
+                if keys[pygame.K_SPACE]:
+                    paddle1.points = 0 
+                    paddle2.points = 0
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

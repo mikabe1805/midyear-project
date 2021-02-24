@@ -21,7 +21,7 @@ class Breakout(Frame):
         self.play = 0
 
         win = pygame.display.set_mode((sw, sh))
-        pygame.display.set_caption("Breakout")
+        pygame.display.set_caption("Danganronpa Breakout")
 
         def BGM():
             if self.play == 0:
