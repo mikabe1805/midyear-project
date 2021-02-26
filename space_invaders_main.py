@@ -7,12 +7,12 @@ pygame.font.init()
 pygame.init()
 class Spaceinvaders(Frame):
    """ space invaders game """
-   def init(self, master, character, callback_on_selected):
+   def init(self, master):
         super().init(master)
-        self.callback = callback_on_selected
-        self.character = character
+        # self.callback = callback_on_selected
         self.grid()
         # self.play_spaceinvaders()
+
    def play_spaceinvaders(self):
         width = 750
         height = 750
