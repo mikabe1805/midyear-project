@@ -27,6 +27,9 @@ class Application(Frame):
 
         self.tetris_bttn = Button(self, text = "Pong", command = self.pong)
         self.tetris_bttn.grid(row = 10, column = 0, sticky = W)
+        
+        self.tetris_bttn = Button(self, text = "Space Invaders", command = self.spaceinvaders)
+        self.tetris_bttn.grid(row = 11, column = 0, sticky = W)
 
         # #This button can close the window
         # self.button_1 = Button(self.base, text ="I close the Window", command = self.base.destroy)
@@ -35,7 +38,7 @@ class Application(Frame):
 
         # create . button
         self.tetris_bttn = Button(self, text = ".", command = self.cheat)
-        self.tetris_bttn.grid(row = 11, column = 0, sticky = W)
+        self.tetris_bttn.grid(row = 12, column = 0, sticky = W)
 
 
     def tetris(self):
@@ -52,6 +55,11 @@ class Application(Frame):
     
     def pong(self):
         self.character_index = "Pong"
+        self.callback(self.character_index)
+        pygame.quit()
+
+    def spaceinvaders(self):
+        self.character_index = "Space Invaders"
         self.callback(self.character_index)
         pygame.quit()
     
