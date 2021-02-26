@@ -97,7 +97,7 @@ class manager (object):
             # Changes the window's title
             # self.root.title ("Pong")
             # Creates and displays a Prepare To Battle screen
-            self.current_screen = Spaceinvaders(master = self.root, character = self.char.name, callback_on_selected = self.onclose_tetris)
+            self.current_screen = Spaceinvaders(master = self.root)
             self.root.update()
             self.current_screen.play_spaceinvaders()
 
