@@ -245,6 +245,7 @@ class Spaceinvaders(Frame):
                 if lost == True:
                     if lost_count > fps * 3:
                         run = False
+                        self.callback()
                     else:
                         continue
 
@@ -258,6 +259,7 @@ class Spaceinvaders(Frame):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         run = False
+                        self.callback()
 
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_a] and player.x + player_vel > 0: # left
