@@ -2,16 +2,18 @@ import pygame
 import os
 import time
 import random
+import simpleaudio as sa
 from tkinter import *
 pygame.font.init()
 pygame.init()
 class Spaceinvaders(Frame):
    """ space invaders game """
-   def init(self, master):
+   def init(self, master, character, callback_on_selected):
         super().init(master)
-        # self.callback = callback_on_selected
+        self.callback = callback_on_selected
+        self.character = character
         self.grid()
-        # self.play_spaceinvaders()
+        self.play_spaceinvaders()
 
    def play_spaceinvaders(self):
         width = 750
@@ -156,12 +158,45 @@ class Spaceinvaders(Frame):
             offset_y = obj2.y - obj1.y
             return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
 
+        def PTA():
+            if self.play == 0:
+                # change to self.character later
+                filename = 'voice_lines/'+self.character+'/angry.wav'
+                wave_obj = sa.WaveObject.from_wave_file(filename)
+                self.play_obj = wave_obj.play()
+            if self.play_obj.is_playing():
+                self.play = 1
+            else:
+                self.play = 0
+        
+        def Danganronpa():
+            if self.lives == 1:
+                spr = pygame.image.load('sprites/'+self.character+'/scary.png')
+                spr.set_alpha(100)
+                self.play2 = 0
+                self.play_obj2.stop()
+                PTA()
+                # spr.set_alpha(self.s/50)
+                # if self.s < 5000:
+                #     self.s += 1
+            else:
+                spr = pygame.image.load('sprites/'+self.character+'/happy'+str(self.load)+'.png')
+                spr.set_alpha(100)
+                ### regularMusic()
+                if self.play == 1:
+                    self.play_obj.stop()
+                    self.play = 0
+                # spr.set_alpha(self.s/50)
+                # if self.s < 5000:
+                #     self.s += 1
+
 
         def main():
             run = True
             fps = 60
             level = 0
             lives = 5
+            self.lives = lives
             main_font = pygame.font.SysFont("comicsans", 50)
             lost_font = pygame.font.SysFont("comicsans", 60)
 
@@ -194,7 +229,7 @@ class Spaceinvaders(Frame):
                 player.draw(window)
 
                 if lost:
-                    lost_label = lost_font.render("You Lost!!", 1, (255, 255, 255))
+                    lost_label = lost_font.render("You flopped!!", 1, (255, 255, 255))
                     window.blit(lost_label, (width/2 - lost_label.get_width()/2, 350))
 
                 pygame.display.update()
@@ -202,7 +237,7 @@ class Spaceinvaders(Frame):
             while run == True:
                 clock.tick(fps)
                 drawing_window()
-                
+                Danganronpa()
                 if lives <= 0 or player.health <= 0:
                     lost = True
                     lost_count += 1
@@ -210,6 +245,7 @@ class Spaceinvaders(Frame):
                 if lost == True:
                     if lost_count > fps * 3:
                         run = False
+                        self.callback()
                     else:
                         continue
 
@@ -223,6 +259,7 @@ class Spaceinvaders(Frame):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         run = False
+                        self.callback()
 
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_a] and player.x + player_vel > 0: # left

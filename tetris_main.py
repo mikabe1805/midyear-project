@@ -37,7 +37,7 @@ class Tetris(Frame):
         
         """
         10 x 20 square grid
-        shapes: S, Z, I, O, J, L, T
+        shapes: M, I, K, A, B, E, S
         represented in order by 0 - 6
         """
         
@@ -54,9 +54,9 @@ class Tetris(Frame):
         top_left_y = s_height - play_height
         
         
-        # SHAPE FORMATS
+        # shapesss
         
-        S = [['.....',
+        M = [['.....',
             '......',
             '..00..',
             '.00...',
@@ -67,7 +67,7 @@ class Tetris(Frame):
             '...0.',
             '.....']]
         
-        Z = [['.....',
+        I = [['.....',
             '.....',
             '.00..',
             '..00.',
@@ -78,7 +78,7 @@ class Tetris(Frame):
             '.0...',
             '.....']]
         
-        I = [['..0..',
+        K = [['..0..',
             '..0..',
             '..0..',
             '..0..',
@@ -89,13 +89,13 @@ class Tetris(Frame):
             '.....',
             '.....']]
         
-        O = [['.....',
+        A = [['.....',
             '.....',
             '.00..',
             '.00..',
             '.....']]
         
-        J = [['.....',
+        B = [['.....',
             '.0...',
             '.000.',
             '.....',
@@ -116,7 +116,7 @@ class Tetris(Frame):
             '.00..',
             '.....']]
         
-        L = [['.....',
+        E = [['.....',
             '...0.',
             '.000.',
             '.....',
@@ -137,7 +137,7 @@ class Tetris(Frame):
             '..0..',
             '.....']]
         
-        T = [['.....',
+        S = [['.....',
             '..0..',
             '.000.',
             '.....',
@@ -158,12 +158,12 @@ class Tetris(Frame):
             '..0..',
             '.....']]
         
-        # 7
-        shapes = [S, Z, I, O, J, L, T]
+        # named the shapes after me <3
+        shapes = [M, I, K, A, B, E, S]
         # all the colors, make it nicer >:(
         # 7 colors previously
         # now 
-        shape_colors = [(84, 22, 180), (112, 39, 195), (185, 76, 225), (150, 0, 205), (164, 66, 220), (181, 100, 227), (228, 0, 224), (236, 71, 233), (244, 147, 242), (0, 181, 236), (204, 255, 0), (255, 106, 0), (67, 59, 103), (96, 88, 133), (148, 141, 179)]
+        shape_colors = [(84, 22, 180), (112, 39, 195), (185, 76, 225), (150, 0, 205), (164, 66, 220), (181, 100, 227), (228, 0, 224)]
         # index 0 - 6 represent shape
         
         
@@ -665,7 +665,6 @@ class Tetris(Frame):
             while run:
                 win.fill((0, 0, 0))
                 # TODO: make it so the font for this is different
-                # TODO: add a "return to game select" button
                 if self.play != 0:
                     self.play_obj.stop()
                     self.play = 0
