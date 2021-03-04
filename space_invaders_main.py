@@ -37,7 +37,7 @@ class Spaceinvaders(Frame):
 
         # Background
         # Test
-        background = pygame.transform.scale(pygame.image.load(os.path.join("background-black.png")), (width, height))
+        background = pygame.transform.scale(pygame.image.load(os.path.join('background/'+self.character+'.png')), (width, height))
 
         class Laser:
             def __init__(self, x, y, img):
@@ -158,37 +158,6 @@ class Spaceinvaders(Frame):
             offset_y = obj2.y - obj1.y
             return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
 
-        def PTA():
-            if self.play == 0:
-                # change to self.character later
-                filename = 'voice_lines/'+self.character+'/angry.wav'
-                wave_obj = sa.WaveObject.from_wave_file(filename)
-                self.play_obj = wave_obj.play()
-            if self.play_obj.is_playing():
-                self.play = 1
-            else:
-                self.play = 0
-        
-        def Danganronpa():
-            if self.lives == 1:
-                spr = pygame.image.load('sprites/'+self.character+'/scary.png')
-                spr.set_alpha(100)
-                self.play2 = 0
-                self.play_obj2.stop()
-                PTA()
-                # spr.set_alpha(self.s/50)
-                # if self.s < 5000:
-                #     self.s += 1
-            else:
-                spr = pygame.image.load('sprites/'+self.character+'/happy'+str(self.load)+'.png')
-                spr.set_alpha(100)
-                ### regularMusic()
-                if self.play == 1:
-                    self.play_obj.stop()
-                    self.play = 0
-                # spr.set_alpha(self.s/50)
-                # if self.s < 5000:
-                #     self.s += 1
 
 
         def main():
@@ -197,8 +166,8 @@ class Spaceinvaders(Frame):
             level = 0
             lives = 5
             self.lives = lives
-            main_font = pygame.font.SysFont("comicsans", 50)
-            lost_font = pygame.font.SysFont("comicsans", 60)
+            main_font = pygame.font.SysFont("goodbyeDespair.ttf", 50)
+            lost_font = pygame.font.SysFont("goodbyeDespair.ttf", 60)
 
             enemies = []
             wave_length = 5
@@ -229,7 +198,7 @@ class Spaceinvaders(Frame):
                 player.draw(window)
 
                 if lost:
-                    lost_label = lost_font.render("You flopped!!", 1, (255, 255, 255))
+                    lost_label = lost_font.render("PUNISHMENT TIME", 1, (255, 255, 255))
                     window.blit(lost_label, (width/2 - lost_label.get_width()/2, 350))
 
                 pygame.display.update()
