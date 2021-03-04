@@ -8,12 +8,12 @@ pygame.font.init()
 pygame.init()
 class Spaceinvaders(Frame):
    """ space invaders game """
-   def init(self, master, character, callback_on_selected):
-        super().init(master)
+   def __init__(self, master, character, callback_on_selected):
+        super().__init__(master)
         self.callback = callback_on_selected
         self.character = character
         self.grid()
-        self.play_spaceinvaders()
+        # self.play_spaceinvaders()
 
    def play_spaceinvaders(self):
         width = 750
@@ -37,7 +37,9 @@ class Spaceinvaders(Frame):
 
         # Background
         # Test
-        background = pygame.image.load(pygame.image.load(os.path.join('sprites/'+self.character+'.jpeg')), (width, height)).convert_alpha
+        # background = pygame.image.load(pygame.image.load(os.path.join('sprites/'+self.character+'.jpeg')), (width, height)).convert_alpha
+        background = pygame.image.load('sprites/'+self.character+'.jpeg')
+        window.blit(background, (width,height))
 
         class Laser:
             def __init__(self, x, y, img):
@@ -206,7 +208,7 @@ class Spaceinvaders(Frame):
             while run == True:
                 clock.tick(fps)
                 drawing_window()
-                Danganronpa()
+                # Danganronpa()
                 if lives <= 0 or player.health <= 0:
                     lost = True
                     lost_count += 1

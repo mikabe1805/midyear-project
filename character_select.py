@@ -37,7 +37,7 @@ class Screen_CharacterSelection (Frame):
             row += 1
 
         # create character selected button!
-        Button(self, text = "READY", fg = "white", bg = "grey", command = self.selected_clicked).grid(row = 1, column = 4, columnspan = 2, sticky = E)
+        Button(self, text = "READY", fg = "white", bg = "grey", command = self.selected_clicked).grid(row = row, column = 4, columnspan = 2, sticky = E)
 
     def selected_clicked(self):
         self.callback_on_selected(self.character_index.get())         
