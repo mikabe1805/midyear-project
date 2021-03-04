@@ -3,11 +3,12 @@ import pygame
 
 class Application(Frame):
     """ GUI application which calculates interest. """
-    def __init__(self, master, callback_on_selected):
+    def __init__(self, master, callback_on_selected, returnn):
         """ Initialize the frame. """
         super().__init__(master)
         self.base = master
         self.callback = callback_on_selected
+        self.returnn = returnn
         self.grid()
         self.create_widgets()
 
@@ -39,6 +40,19 @@ class Application(Frame):
         # create . button
         self.tetris_bttn = Button(self, text = ".", command = self.cheat)
         self.tetris_bttn.grid(row = 12, column = 0, sticky = W)
+
+        # empty label for spacing
+        Label(self, text = "").grid(row = 13, column = 0)
+
+        # empty label for spacing
+        Label(self, text = "").grid(row = 14, column = 0)
+
+        # empty label for spacing
+        Label(self, text = "").grid(row = 15, column = 0)
+
+        # create back to character select button
+        self.tetris_bttn = Button(self, text = "back to character select", fg = "white", bg = "grey", command = self.returnn)
+        self.tetris_bttn.grid(row = 15, column = 2, sticky = W)
 
 
     def tetris(self):

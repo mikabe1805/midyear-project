@@ -51,9 +51,16 @@ class manager (object):
         self.root.title ("mini game select")
         # Creates and displays a Character Selection screen
         self.current_screen = Application(master = self.root, 
-                                                        callback_on_selected = self.onclose_game_selection
+                                                        callback_on_selected = self.onclose_game_selection, returnn = self.return_to_character
                                                         )
     
+    def return_to_character (self):
+        # Destroys the Character Selection window
+        self.current_screen.destroy()
+
+        # Continue on - set up the Prepare To Battle screen!
+        self.setup_first()
+
     def onclose_game_selection (self, game):
         # Destroys the Character Selection window
         self.current_screen.destroy()
