@@ -37,7 +37,7 @@ class Spaceinvaders(Frame):
 
         # Background
         # Test
-        background = pygame.transform.scale(pygame.image.load(os.path.join('background/'+self.character+'.png')), (width, height))
+        background = pygame.image.load(pygame.image.load(os.path.join('sprites/'+self.character+'.jpeg')), (width, height)).convert_alpha
 
         class Laser:
             def __init__(self, x, y, img):
