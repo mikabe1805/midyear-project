@@ -225,11 +225,15 @@ class Spaceinvaders(Frame):
                 BGM()
                 if lives <= 0 or player.health <= 0:
                     lost = True
+                    self.bgmSound.stop()
+                    self.play = 0
                     lost_count += 1
 
                 if lost == True:
                     if lost_count > fps * 3:
                         run = False
+                        self.bgmSound.stop()
+                        self.play = 0
                         self.callback()
                     else:
                         continue
@@ -244,6 +248,8 @@ class Spaceinvaders(Frame):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         run = False
+                        self.bgmSound.stop()
+                        self.play = 0
                         self.callback()
 
                 keys = pygame.key.get_pressed()
