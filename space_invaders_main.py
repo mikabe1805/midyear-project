@@ -18,6 +18,7 @@ class Spaceinvaders(Frame):
    def play_spaceinvaders(self):
         width = 750
         height = 750
+        self.play = 0
         window = pygame.display.set_mode((width, height))
         pygame.display.set_caption("Danganronpa Space Invaders")
 
@@ -40,6 +41,16 @@ class Spaceinvaders(Frame):
         # background = pygame.image.load(pygame.image.load(os.path.join('sprites/'+self.character+'.jpeg')), (width, height)).convert_alpha
         background = pygame.image.load('sprites/'+self.character+'.jpeg')
         window.blit(background, (width,height))
+
+        def BGM():
+            if self.play == 0:
+                filename = 'voice_lines/'+self.character+'/happy.wav'
+                bgmSound = sa.WaveObject.from_wave_file(filename)
+                self.bgmSound = bgmSound.play()
+            if self.bgmSound.is_playing():
+                self.play = 1
+            else:
+                self.play = 0
 
         class Laser:
             def __init__(self, x, y, img):
@@ -168,6 +179,7 @@ class Spaceinvaders(Frame):
             level = 0
             lives = 5
             self.lives = lives
+            pygame.font.init()
             main_font = pygame.font.SysFont("goodbyeDespair.ttf", 50)
             lost_font = pygame.font.SysFont("goodbyeDespair.ttf", 60)
 
@@ -202,13 +214,15 @@ class Spaceinvaders(Frame):
                 if lost:
                     lost_label = lost_font.render("PUNISHMENT TIME", 1, (255, 255, 255))
                     window.blit(lost_label, (width/2 - lost_label.get_width()/2, 350))
+                    self.bgmSound.stop()
+                    self.play = 0
 
                 pygame.display.update()
 
             while run == True:
                 clock.tick(fps)
                 drawing_window()
-                # Danganronpa()
+                BGM()
                 if lives <= 0 or player.health <= 0:
                     lost = True
                     lost_count += 1
