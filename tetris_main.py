@@ -644,7 +644,7 @@ class Tetris(Frame):
                     else:
                         draw_text_middle2("YOU LOST", "TIME FOR PUNISHMENT", 65, (180, 0, 0), win)
                         pygame.display.update()
-                        pygame.time.delay(4000)
+                        pygame.time.delay(2300)
                         if self.play2 != 0:
                             self.play_obj2.stop()
                             self.play2 = 0
