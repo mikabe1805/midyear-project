@@ -1,6 +1,7 @@
 # I hate github
 # I still hate github
 # image of mikan will not show up until player starts losing
+# fixed mika's awful** code
 import pygame
 import random
 import simpleaudio as sa
