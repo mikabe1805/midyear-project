@@ -180,8 +180,8 @@ class Spaceinvaders(Frame):
             lives = 5
             self.lives = lives
             pygame.font.init()
-            main_font = pygame.font.SysFont("goodbyeDespair.ttf", 50)
-            lost_font = pygame.font.SysFont("goodbyeDespair.ttf", 60)
+            main_font = pygame.font.Font("goodbyeDespair.ttf", 50)
+            lost_font = pygame.font.Font("goodbyeDespair.ttf", 60)
 
             enemies = []
             wave_length = 5
