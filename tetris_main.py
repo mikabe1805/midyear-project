@@ -6,7 +6,6 @@ import random
 import simpleaudio as sa
 from tkinter import *
 import cv2
-import numpy as np
 #ffpyplayer for playing audio
 from ffpyplayer.player import MediaPlayer
 
